@@ -1,0 +1,47 @@
+{
+  "body": {
+    "label": "Body",
+    "icon": "body",
+    "key": "body"
+  },
+  "neck": {
+    "label": "Neck",
+    "icon": "headstock",
+    "key": "neck"
+  },
+  "fingerboard": {
+    "label": "Fingerboard",
+    "icon": "headstock",
+    "key": "fingerboard"
+  },
+  "sidedots": {
+    "label": "Sidedots",
+    "icon": "headstock",
+    "key": "sidedots"
+  },
+  "hardware": {
+    "label": "Hardware Color",
+    "icon": "headstock",
+    "key": "hardware"
+  },
+  "battery": {
+    "label": "Battery",
+    "icon": "battery",
+    "key": "battery"
+  },
+  "pickups": {
+    "label": "Pickup Color",
+    "icon": "headstock",
+    "key": "pickups"
+  },
+  "finish": {
+    "label": "Finish",
+    "icon": "paint-brush",
+    "key": "finish"
+  },
+  "case": {
+    "label": "Case",
+    "icon": "headstock",
+    "key": "case"
+  }
+}

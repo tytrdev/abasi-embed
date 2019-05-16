@@ -1,0 +1,12 @@
+extends: airbnb
+env:
+  browser: true
+  es6: true
+parser: babel-eslint
+rules:
+  react/jsx-filename-extension: off
+  react/prefer-stateless-function: off
+  react/forbid-prop-types: off
+  max-len: off
+  jsx-a11y/click-events-have-key-events: off
+  

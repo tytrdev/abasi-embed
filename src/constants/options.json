@@ -1,0 +1,295 @@
+{
+  "general": {
+    "label": "General",
+    "icon": "fa-gear",
+    "options": {
+      "body-style": {
+        "label": "Body Style",
+        "icon": "fa-bars",
+        "options": {
+          "six-standard": {
+            "label": "6",
+            "key": "strings",
+            "value": 6
+          },
+          "six-multiscale": {
+            "label": "7",
+            "key": "strings",
+            "value": 7
+          },
+          "seven-standard": {
+            "label": "8",
+            "key": "strings",
+            "value": 8
+          },
+          "seven-mutliscale": {
+            "label": "8",
+            "key": "strings",
+            "value": 8
+          },
+          "eight-multiscale": {
+            "label": "8",
+            "key": "strings",
+            "value": 8
+          }
+        }
+      },
+      "scale": {
+        "label": "Scale",
+        "icon": "fa-ruler",
+        "options": {
+          "standard": {
+            "label": "Standard",
+            "key": "scale",
+            "value": "Standard"
+          },
+          "multilscale": {
+            "label": "Multi-Scale",
+            "key": "scale",
+            "value": "Multiscale"
+          }
+        }
+      }
+    }
+  },
+  "body": {
+    "label": "Body",
+    "icon": "fa-android",
+    "options": {
+      "wood": {
+        "label": "Wood",
+        "icon": "fa-wood",
+        "options": {
+          "poplar": {
+            "label": "Poplar",
+            "icon": "",
+            "key": "body-wood",
+            "value": "poplar"
+          },
+          "swamp-ash": {
+            "label": "Swamp Ash",
+            "icon": "",
+            "key": "body-wood",
+            "value": "swamp-ash"
+          },
+          "mahogany": {
+            "label": "Mahogany",
+            "icon": "",
+            "key": "body-wood",
+            "value": "mahogany"
+          },
+          "walnut": {
+            "label": "Walnut",
+            "icon": "",
+            "key": "body-wood",
+            "value": "walnut"
+          },
+          "other": {
+            "label": "Other",
+            "icon": "",
+            "key": "body-wood",
+            "value": "other",
+            "price": "Inquiry"
+          }
+        }
+      },
+      "top-wood": {
+        "label": "Top Wood",
+        "icon": "",
+        "options": {
+          "flamed-maple": {
+            "label": "Flamed Maple",
+            "icon": "",
+            "key": "top-wood",
+            "value": "flamed-maple"
+          },
+          "burled-marple": {
+            "label": "Burled Maple",
+            "icon": "",
+            "key": "top-wood",
+            "value": "burled-maple"
+          },
+          "figured-koa": {
+            "label": "Figured Koa",
+            "icon": "",
+            "key": "top-wood",
+            "value": "figured-koa"
+          },
+          "wenge": {
+            "label": "Wenge",
+            "icon": "",
+            "key": "top-wood",
+            "value": "wenge"
+          },
+          "walnut": {
+            "label": "Walnut",
+            "icon": "",
+            "key": "top-wood",
+            "value": "walnut"
+          },
+          "other": {
+            "label": "Other",
+            "icon": "",
+            "key": "top-wood",
+            "value": "other",
+            "price": "Inquiry"
+          }
+        }
+      },
+      "finish": {
+        "label": "Finish",
+        "options": {
+          "black-pearl": {
+            "label": "Black Pearl",
+            "key": "finish",
+            "value": "black-pearl"
+          },
+          "sports-classic-grey": {
+            "label": "Sports Classic Grey",
+            "key": "finish",
+            "value": "sports-classic-grey"
+          },
+          "white-pearl": {
+            "label": "White Pearl",
+            "key": "finish",
+            "value": "white-pearl"
+          }
+        }
+      }
+    }
+  },
+  "neck": {
+    "label": "Neck",
+    "icon": "fa-window-restore",
+    "options": {
+      "wood": {
+        "label": "Wood",
+        "options": {
+          "two-piece-wenge": {
+            "label": "2 piece Wenge",
+            "key": "neck-wood",
+            "value": "2-piece-wenge"
+          },
+          "two-piece-maple": {
+            "label": "2 piece Maple",
+            "key": "neck-wood",
+            "value": "2-piece-maple"
+          },
+          "two-piece-mahogany": {
+            "label": "2 piece Mahogany",
+            "key": "neck-wood",
+            "value": "2-piece-mahogany"
+          },
+          "other": {
+            "label": "Other",
+            "key": "neck-wood",
+            "value": "Other",
+            "price": "Inquiry"
+          }
+        }
+      },
+      "fingerboard": {
+        "label": "Material",
+        "options": {
+          "katalox": {
+            "label": "Katalox",
+            "key": "fingerboard",
+            "value": "katalox"
+          },
+          "richlite": {
+            "label": "Richlite",
+            "key": "fingerboard",
+            "value": "richlite"
+          },
+          "rosewood": {
+            "label": "Rosewood",
+            "key": "fingerboard",
+            "value": "rosewood"
+          }
+        }
+      }
+    }
+  },
+  "headstock": {
+    "label": "Headstock",
+    "icon": "fa-book",
+    "options": {
+      "style": {
+        "label": "Style",
+        "icon": "fa-bars",
+        "options": {
+          "headstock": {
+            "label": "Headstock",
+            "key": "headstyle",
+            "value": "Headstock"
+          },
+          "headless": {
+            "label": "Headless",
+            "key": "headstyle",
+            "value": "Headless"
+          }
+        }
+      }
+    }
+  },
+  "hardware": {
+    "label": "Hardware",
+    "icon": "fa-angle-down",
+    "options": {
+      "color": {
+        "label": "Color",
+        "options": {
+          "chrome": {
+            "label": "Chrome",
+            "key": "hardware-color",
+            "value": "chrome"
+          },
+          "black": {
+            "label": "Black",
+            "key": "hardware-color",
+            "value": "black"
+          },
+          "gold": {
+            "label": "Gold",
+            "key": "hardware-color",
+            "value": "gold"
+          }
+        }
+      },
+      "fretwire": {
+        "label": "Frets",
+        "options": {
+          "nickel-silver": {
+            "label": "Nickel Silver",
+            "key": "fretwire",
+            "value": "nickel-silver"
+          },
+          "custom-nickel": {
+            "label": "Custom Gauge Nickel Silver",
+            "key": "fretwire",
+            "value": "nickel-silver"      
+          },
+          "custom-stainless": {
+            "label": "Custom Gauge Stainless Steel",
+            "key": "fretwire",
+            "value": "nickel-silver"        
+          }
+        }
+      },
+      "nut": {
+        "label": "Nut Width",
+        "options": {
+          "custom": {
+            "label": "Custom Nut Width",
+            "key": "nut-width",
+            "value": "custom"
+          }
+        }
+      }
+    }
+  },
+  "extras": {
+    "label": "Extras",
+    "icon": "fa-archive"
+  }
+}

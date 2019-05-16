@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Body Styles",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM1MTAzMDE0OTc4",
+    "key": "body-style"
+  },
+  {
+    "name": "Body Woods",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIxMDM0MzA2",
+    "key": "body-wood"
+  },
+  {
+    "name": "Top Woods",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIxMzI5MjE4",
+    "key": "top-wood"
+  },
+  {
+    "name": "Neck Woods",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIxNTU4NTk0",
+    "key": "neck-wood"
+  },
+  {
+    "name": "Fingerboards",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIxODIwNzM4",
+    "key": "fingerboard"
+  },
+  {
+    "name": "Hardware Colors",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIyMTE1NjUw",
+    "key": "hardware-color"
+  },
+  {
+    "name": "Fretwires",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIyMzc3Nzk0",
+    "key": "fretwire"    
+  },
+  {
+    "name": "Finishes",
+    "collectionId": "Z2lkOi8vc2hvcGlmeS9Db2xsZWN0aW9uLzM2MzIyNjM5OTM4",
+    "key": "finish"
+  }
+]
