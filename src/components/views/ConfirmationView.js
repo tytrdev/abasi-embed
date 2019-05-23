@@ -24,8 +24,8 @@ export default class ConfirmationView extends React.Component {
       <div className="container">
         <div className="container columns">
           <div className="back-button">
-            <button className="btn" onClick={this.props.handleMain}>
-              Back
+            <button className="back-to-order" onClick={this.props.handleMain}>
+              <i className="fa fa-times"></i>
             </button>
           </div>
 

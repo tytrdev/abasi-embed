@@ -18,9 +18,7 @@ export default class Viewport extends React.Component {
 
   render() {
     return (
-      <div className="viewport">
-        <div id="renderer-container" className="viewport-view" />
-      </div>
+      <div id="renderer-container" className="viewport-view" />
     );
   }
 }

@@ -62,9 +62,19 @@ class Materials {
     });
   }
 
+  static withoutColor(reflectionCube) {
+    return new Three.MeshStandardMaterial( {
+      envMap: reflectionCube,
+      roughness: 0.8,
+      metalness: 0.3,
+      flatShading: false,
+    });
+  }
+
   static loadTexture(path, loader, renderer) {
     const texture = loader.load(path);
-    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    // texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    texture.anisotropy = 32;
     texture.wrapS = texture.wrapT = Three.MirroredRepeatWrapping;
     texture.minFilter = texture.magFilter = Three.LinearFilter;
     return texture;

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import Tile from './Tile';
 
 import {
   Accordion,
@@ -11,35 +10,46 @@ import {
   AccordionItemPanel,
 } from 'react-accessible-accordion';
 
-// Demo styles, see 'Styles' section below for some notes on use.
-import 'react-accessible-accordion/dist/fancy-example.css';
+class Menu extends React.Component {
+  constructor(props) {
+    super(props);
 
-const Menu = ({ items, callback }) => {
-  const tiles = _.map(items, (item, i) => {
-    // return (
-    //   <Tile key={i} data={item} callback={callback} />
-    // );
+    this.state = {
+      uuids: [],
+    };
 
-    console.log(item, i);
+    this.getOption = this.getOption.bind(this);
+    this.getItem = this.getItem.bind(this);
+    this.handleSelection = this.handleSelection.bind(this);
+  }
 
-    const options = _.map(item.options, option => {
-      console.log(option);
+  handleSelection(event) {
+    const item = event.target;
 
-      return (
-        <span className="item-option">
-          <span className="item-option-name">
-            { option.name }
-          </span>
+    console.log(item);
+  }
 
-          <span className="item-option-price">
-            ${ option.price }
-          </span>
+  getOption(item, option, i) {
+    return (
+      <span key={`menu-item-option-${i}`} className="item-option" onClick={() => this.props.callback(item, option)}>
+        <span className="item-option-name">
+          { option.name }
         </span>
-      )
+
+        <span className="item-option-price">
+          ${ option.price }
+        </span>
+      </span>
+    )
+  }
+
+  getItem(item, i) {
+    const options = _.map(item.options, (option, i) => {
+      return this.getOption(item, option, i);
     });
 
     return (
-      <AccordionItem>
+      <AccordionItem key={`menu-item-${i}`} onClick={() => this.handleSelection(item.id)} uuid={item.id}>
         <AccordionItemHeading>
           <AccordionItemButton>
             <span className="item-title">
@@ -57,14 +67,18 @@ const Menu = ({ items, callback }) => {
           </span>
         </AccordionItemPanel>
       </AccordionItem>
-    )
-  });
+    );
+  }
 
-  return (
-    <Accordion>
-      { tiles }
-    </Accordion>
-  );
+  render() {
+    const items = _.map(this.props.items, this.getItem);
+
+    return (
+      <Accordion allowZeroExpanded className="configurator-menu">
+        { items }
+      </Accordion>
+    );
+  }
 }
 
 Menu.defaultProps = {

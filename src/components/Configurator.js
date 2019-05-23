@@ -27,7 +27,7 @@ export default class Configurator extends React.Component {
 
     // Initial State
     this.state = {
-      loading: false,
+      loading: true,
       parsing: false,
       items: [[]],
       mode: Modes.HOME,
@@ -49,6 +49,7 @@ export default class Configurator extends React.Component {
     this.handleMain = this.handleMain.bind(this);
     this.submitOrder = this.submitOrder.bind(this);
     this.updatePercent = this.updatePercent.bind(this);
+    this.transformItems = this.transformItems.bind(this);
 
     // Setup components to use for different views
     this.components = {
@@ -59,6 +60,23 @@ export default class Configurator extends React.Component {
     };
 
     this.renderer = new Renderer(this.state.data, this.updatePercent);
+  }
+
+  transformItems(items) {
+    const nonFinishItems = _.filter(items, i => i.key !== 'finish');
+    const finishItems = _.sortBy(_.filter(items, i => i.key === 'finish'), i => Number.parseInt(i.position));
+
+    const item = finishItems[0];
+    item.title = 'Finish'
+    item.options.push(...finishItems[1].options);
+    item.options.push(...finishItems[2].options);
+
+    const transformedItems = [...nonFinishItems, item];
+
+    return _.sortBy(transformedItems, (i) => {
+      return Number.parseInt(i.position);
+    });
+
   }
 
   async componentDidMount() {
@@ -79,9 +97,6 @@ export default class Configurator extends React.Component {
     const models = await AssetService.getModelMetadata();
     const textures = await AssetService.getTextureMetadata();
     
-    const sortedItems = _.sortBy(items, (i) => {
-      return Number.parseInt(i.position);
-    });
 
     // TODO: Fix this
     // Begin pricing module
@@ -89,23 +104,23 @@ export default class Configurator extends React.Component {
     this.evaluatePrice();
 
     this.setState({
-      items: [sortedItems],
+      items: [this.transformItems(items)],
       models,
       textures,
       selections,
     });
 
-    // const type = this.props.match.params.type;
+    const type = this.props.match.params.type;
 
-    // if (!type) {
-    //   toast.error('Unable to load proper config, please check the URL you were given');
-    // }
+    if (!type) {
+      toast.error('Unable to load proper config, please check the URL you were given');
+    }
 
-    // const model = ModelMap[type];
-    // await this.renderer.selectModel({ asset: model }, 'body');
-    // await this.renderer.selectTexture({ asset: textureMap.maple }, 'neck-full');
-    // await this.renderer.selectTexture({ asset: textureMap.alder }, 'finish');
-    // await this.renderer.selectMaterial({ color: '#BFC1C2' }, 'hardware');
+    const model = ModelMap[type];
+    await this.renderer.selectModel({ asset: model }, 'body');
+    await this.renderer.selectTexture({ asset: textureMap.maple, matte: true }, 'neck-full');
+    await this.renderer.selectTexture({ asset: textureMap.alder, matte: true }, 'finish');
+    await this.renderer.selectMaterial({ color: '#BFC1C2' }, 'hardware');
   }
 
   componentDidUpdate() {
@@ -125,7 +140,7 @@ export default class Configurator extends React.Component {
   updatePercent(percent, loading, parsing) {
     if (percent >= 100) {
       if (loading === undefined) {
-        console.log('Fuck the loading bullshit');
+        // TODO: Loading fixes?
         loading = false;
         parsing = true;
       }
@@ -193,38 +208,29 @@ export default class Configurator extends React.Component {
     return selections;
   }
 
-  async makeSelection(selection) {
-    switch (selection.type) {
-      case SelectionTypes.MENU:
-      case SelectionTypes.MODEL:
-      case SelectionTypes.MATERIAL:
-      case SelectionTypes.TEXTURE:
-      case SelectionTypes.FINISH:
-        this.performUpdate(selection);
-        break;
-      default:
-        this.configureSelection(selection);
-        break;
-    }
+  async makeSelection(selection, option) {
+    // switch (selection.type) {
+    //   case SelectionTypes.MENU:
+    //   case SelectionTypes.MODEL:
+    //   case SelectionTypes.MATERIAL:
+    //   case SelectionTypes.TEXTURE:
+    //   case SelectionTypes.FINISH:
+    //     this.performUpdate(selection);
+    //     break;
+    //   default:
+    //     break;
+    // }
+
+    // TODO: Simplify
+    this.configureSelection(selection, option);
   }
 
-  async performUpdate(selection) {
-    const { items } = this.state;
-    items.push(selection.options);
+  async configureSelection(selection, option) {
+    console.log(selection, option);
 
-    this.setState({
-      items,
-      key: selection.key,
-      type: selection.type,
-    });
-
-    this.evaluatePrice();
-  }
-
-  async configureSelection(selection) {
-    console.log(selection);
-
-    const { selections, key, type } = this.state;
+    const { selections } = this.state;
+    const { key, type } = selection;
+    console.log(key, type)
 
     this.setState({
       loading: true,
@@ -234,19 +240,19 @@ export default class Configurator extends React.Component {
       switch(type) {
         case 'model':
           console.log('model at:', key);
-          await this.renderer.selectModel(selection, key);
+          await this.renderer.selectModel(option, key);
           break;
         case 'material':
           console.log('material at:', key);
-          await this.renderer.selectMaterial(selection, key);
+          await this.renderer.selectMaterial(option, key);
           break;
         case 'texture':
           console.log('texture at:', key);
-          await this.renderer.selectTexture(selection, key);
+          await this.renderer.selectTexture(option, key);
           break;
         case 'finish':
           console.log('finish at:', key);
-          await this.renderer.selectFinish(selection, key);
+          await this.renderer.selectFinish(option, key);
           break;
         default:
           console.log('This is something else entirely');

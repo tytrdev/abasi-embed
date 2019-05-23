@@ -40,13 +40,14 @@ export default class HomeView extends React.Component {
               callback={this.props.makeSelection}
             />
 
-            <button type="button" className="review-btn" onClick={this.props.handlePrice}>
-              Review and Submit Order
+            {/* <button type="button" className="review-btn" onClick={this.props.handlePrice}>
+              <i className="fa fa-shopping-cart"></i>
+              Review Order
             </button>
 
             <div className="price-btn">  
               <Price price={this.props.price} handlePrice={this.props.handlePrice} />
-            </div>
+            </div> */}
           </div>
         }
       </div>
