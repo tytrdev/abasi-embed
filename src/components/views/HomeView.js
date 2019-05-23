@@ -8,7 +8,7 @@ import Price from '../Price';
 export default class HomeView extends React.Component {
   constructor(props) {
     super(props);
-
+    console.log(props);
     this.handleChange = this.handleChange.bind(this);
     this.changeMode = this.changeMode.bind(this);
   }
@@ -22,6 +22,12 @@ export default class HomeView extends React.Component {
   }
 
   render() {
+    const visibility = this.props.loading ? 'hidden' : 'visible';
+
+    const style = {
+      visibility,
+    };
+
     return (
       <div className="flex home">
         <div className="home-viewport">
@@ -29,27 +35,28 @@ export default class HomeView extends React.Component {
             price={this.props.price}
             handlePrice={this.props.handlePrice}
           />
+
+          <button type="button" className="review-btn" onClick={this.props.handlePrice} style={style}>
+            <i className="fa fa-shopping-cart"></i>
+            Review Order
+          </button>
+
+          <div className="price-btn" style={style}>  
+            <Price price={this.props.price} handlePrice={this.props.handlePrice} />
+          </div>
         </div>
 
-        {!this.props.loading &&
-          <div className="home-menu">
-            <Menu
-              items={this.props.getItems()}
-              columns
-              renderer={this.props.renderer}
-              callback={this.props.makeSelection}
-            />
+        <div className="home-menu" style={style}>
+          <Menu
+            items={this.props.getItems()}
+            columns
+            renderer={this.props.renderer}
+            callback={this.props.makeSelection}
+            uuids={this.props.uuids}
+            setUuids={this.props.setUuids}
+          />
 
-            {/* <button type="button" className="review-btn" onClick={this.props.handlePrice}>
-              <i className="fa fa-shopping-cart"></i>
-              Review Order
-            </button>
-
-            <div className="price-btn">  
-              <Price price={this.props.price} handlePrice={this.props.handlePrice} />
-            </div> */}
-          </div>
-        }
+        </div>
       </div>
     );
   }

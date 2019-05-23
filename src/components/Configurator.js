@@ -34,6 +34,7 @@ export default class Configurator extends React.Component {
       price: 0,
       selections: {},
       percent: 0,
+      uuids: [],
     };
 
     // Event bindings
@@ -50,6 +51,7 @@ export default class Configurator extends React.Component {
     this.submitOrder = this.submitOrder.bind(this);
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
+    this.setUuids = this.setUuids.bind(this);
 
     // Setup components to use for different views
     this.components = {
@@ -62,7 +64,17 @@ export default class Configurator extends React.Component {
     this.renderer = new Renderer(this.state.data, this.updatePercent);
   }
 
+  setUuids(id) {
+    this.setState({
+      uuids: [id],
+    });
+  }
+
   transformItems(items) {
+    _.each(items, item => {
+      item.options = _.sortBy(item.options, ['id', 'price']);
+    });
+
     const nonFinishItems = _.filter(items, i => i.key !== 'finish');
     const finishItems = _.sortBy(_.filter(items, i => i.key === 'finish'), i => Number.parseInt(i.position));
 
@@ -163,7 +175,7 @@ export default class Configurator extends React.Component {
     const selections = {
       body: {type: 'model', asset: "c95aa5d830344811b8e726740199dda0", id: "6d65d532ad564be39484f29eb8526521", name: "Eight String", price: "2399"},
       ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", color: "#000", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
-      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", color: "#000", id: "b15f39a18970471e9b632e2b0085db13", name: "Genuine Mahogany", price: "0"},
+      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", color: "#000", id: "b15f39a18970471e9b632e2b0085db13", name: "Maple", price: "0"},
       fingerboard: {asset: "4405833b559f462381727a1b538182ed", color: "#000", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
       sidedots: {color: "#000", id: "4261991f913648ab9cdee1a50e55a0a3", name: "White", price: "0"},
       hardware: {color: "#000", id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
@@ -203,7 +215,11 @@ export default class Configurator extends React.Component {
       }
     }
 
-    this.evaluatePrice();
+    const price = this.evaluatePrice(selections);
+
+    this.setState({
+      price,
+    });
 
     return selections;
   }
@@ -264,26 +280,23 @@ export default class Configurator extends React.Component {
     }
 
     selections[key] = selection;
+    const price = this.evaluatePrice(selections);
+
     this.setState({
       selections,
       loading: false,
+      price,
     });
-
-    this.evaluatePrice();
   }
 
 
-  async evaluatePrice() {
-    const price = Number.parseInt(_.map(this.state.selections, s => s.price).reduce((p, c) => {
+  evaluatePrice() {
+    return Number.parseInt(_.map(this.state.selections, s => s.price).reduce((p, c) => {
       p = Number.parseInt(p);
       c = Number.parseInt(c);
 
       return p + c;
     }, 0));
-
-    this.setState({
-      price,
-    })
   }
 
   getItems() {
@@ -372,6 +385,8 @@ export default class Configurator extends React.Component {
             data={this.state.selections}
             submitOrder={this.submitOrder}
             updatePercent={this.updatePercent}
+            uuids={this.state.uuids}
+            setUuids={this.setUuids}
           />
         }
       </div>

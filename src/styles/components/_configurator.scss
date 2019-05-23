@@ -61,8 +61,10 @@
 
 /* Viewport */
 .review-btn {
-  align-self: flex-end;
+  position: absolute;
+  z-index: 10;
   right: 160px;
+  bottom: 0;
   border: none;
   width: 150px;
   color: $anchor-color;
@@ -71,7 +73,6 @@
   cursor: pointer;
   text-align: center;
   transition: all 0.3s linear;
-  display: inline-block;
 
   &:hover {
     color: $primary-color;
@@ -84,9 +85,10 @@
 }
 
 .price-btn {
-  align-self: flex-end;
-  right: 0px;
-  display: inline-block;
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
   width: 150px;
   color: $anchor-color;
   height: 50px;
@@ -274,7 +276,6 @@
 
 .configurator-menu {
   overflow-y: scroll;
-  
 }
 
 html {

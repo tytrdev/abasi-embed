@@ -14,19 +14,10 @@ class Menu extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      uuids: [],
-    };
-
     this.getOption = this.getOption.bind(this);
     this.getItem = this.getItem.bind(this);
-    this.handleSelection = this.handleSelection.bind(this);
-  }
 
-  handleSelection(event) {
-    const item = event.target;
-
-    console.log(item);
+    console.log('Creating menu');
   }
 
   getOption(item, option, i) {
@@ -49,7 +40,7 @@ class Menu extends React.Component {
     });
 
     return (
-      <AccordionItem key={`menu-item-${i}`} onClick={() => this.handleSelection(item.id)} uuid={item.id}>
+      <AccordionItem key={`menu-item-${i}`} onClick={() => this.props.setUuids(item.id)} uuid={item.id}>
         <AccordionItemHeading>
           <AccordionItemButton>
             <span className="item-title">
@@ -74,7 +65,7 @@ class Menu extends React.Component {
     const items = _.map(this.props.items, this.getItem);
 
     return (
-      <Accordion allowZeroExpanded className="configurator-menu">
+      <Accordion preExpanded={this.props.uuids} allowZeroExpanded className="configurator-menu">
         { items }
       </Accordion>
     );
