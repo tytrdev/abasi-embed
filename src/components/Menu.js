@@ -49,10 +49,6 @@ class Menu extends React.Component {
           </AccordionItemButton>
         </AccordionItemHeading>
         <AccordionItemPanel>
-          <span className="item-description">
-            { item.description }
-          </span>
-
           <span className="item-options">
             { options }
           </span>

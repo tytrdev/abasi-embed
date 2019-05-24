@@ -56,12 +56,13 @@ export default class Renderer {
     this.reflectionCube = reflectionCube;
 
     this.metalMaterial = Materials.metalWithColor(reflectionCube, 0x808080);
+    this.satinMetalMaterial = Materials.withColor(reflectionCube, 0xBFC1C2);
     this.darkMetalMaterial = Materials.metalWithColor(reflectionCube, 0x222222);
     this.blackMetalMaterial = Materials.metalWithColor(reflectionCube, 0x272222);
     this.lighterMetalMaterial = Materials.metalWithColor(reflectionCube, 0x333333);
 
     this.brownMaterial = Materials.withColor(reflectionCube, 0x272222);
-    this.whiteMaterial = Materials.metalWithColor(reflectionCube, 0xDFDCDC);
+    this.whiteMaterial = Materials.withColor(reflectionCube, 0xD8D5D5);
   }
 
   getRendererElement() {
@@ -85,32 +86,28 @@ export default class Renderer {
     const ambient = new Three.AmbientLight( 0xffffff, 1.0 );
     this.scene.add( ambient );
 
-    const light = new Three.HemisphereLight( 0xffffff, 0xffffff, 0.3);
-    this.scene.add(light);
+    // const light = new Three.HemisphereLight( 0xffffff, 0xffffff, 0.3);
+    // this.scene.add(light);
 
-    const frontLight = new Three.DirectionalLight( 0xffffff, 0.5);
-    frontLight.position.set(0, 0, -40);
-    frontLight.lookAt(0, 0, 0);
-    this.frontLight = frontLight;
-    this.scene.add(frontLight);
 
-    const leftLight = new Three.DirectionalLight( 0xffffff, 0.5);
-    leftLight.position.set(-10, 0, -20);
-    leftLight.lookAt(0, 0, 0);
-    this.leftLight = leftLight;
-    this.scene.add(leftLight);
-
-    const rightLight = new Three.DirectionalLight( 0xffffff, 0.5);
-    rightLight.position.set(10, 0, -20);
-    rightLight.lookAt(0, 0, 0);
-    this.rightLight = rightLight;
-    this.scene.add(rightLight);
-
-    const backLight = new Three.DirectionalLight( 0xffffff, 0.5);
-    backLight.position.set(0, 0, 40);
-    backLight.lookAt(0, 0, 0);
-    this.backLight = backLight;
-    this.scene.add(backLight);
+    const lightModifier = 20;
+    const positions = [
+      // [1, 1, 1, 0.3],
+      [1, 1, -1, 0.3],
+      // [1, -1, 1, 0.3],
+      [1, -1, -1, 0.3],
+      // [-1, 1, 1, 0.3],
+      [-1, 1, -1, 0.3],
+      // [-1, -1, 1, 0.1],
+      [-1, -1, -1, 0.1],
+    ];
+    
+    _.each(positions, data => {
+      const light = new Three.DirectionalLight(0xffffff, data[3]);
+      light.position.set(data[0] * lightModifier, data[1] * lightModifier, data[2] * lightModifier);
+      light.lookAt(0, 0, 0);
+      this.scene.add(light);
+    });
 
     window.addEventListener('resize', this.resize, false);
 
@@ -169,6 +166,11 @@ export default class Renderer {
     model.traverse( child => {
       if ( child instanceof Three.Mesh ) {
         switch (child.name) {
+          case 'Strings':
+          case 'FRETS001':          
+          case 'Screws001':
+            child.material = this.satinMetalMaterial;
+            break;
           case 'PICKUPS':
             child.material = this.whiteMaterial;
             break;
@@ -182,11 +184,8 @@ export default class Renderer {
           case 'Tuner_White_rubber':
             child.material = this.whiteMaterial;
             break;
-          case 'Strings':
           case 'String_ends':
           case 'Tuners':
-          case 'FRETS001':
-          case 'Screws001':
             child.material = this.metalMaterial;
             break;
           case 'String_holder':
@@ -241,7 +240,7 @@ export default class Renderer {
     this.models.current.traverse((child) => {
       console.log(child);
       if (child instanceof Three.Mesh && layerKey.indexOf(child.name) !== -1) {
-        if (selection.matte) {
+        if (selection.matte || child.name === 'PICKUPS') {
           child.material = Materials.withColor(this.reflectionCube, colorToSigned24Bit(selection.color));
         } else {
           child.material = Materials.metalWithColor(this.reflectionCube, colorToSigned24Bit(selection.color));
@@ -318,6 +317,14 @@ export default class Renderer {
 
         if (type === 'artseries' && (child.name === 'Battery_Bottom' || child.name === 'Input_Jack_Bottom_Body')) {
           child.material = material;
+        }
+
+        if (type === 'artseries' && child.name === 'Head_Top') {
+          if (selection.name.toLowerCase().indexOf('light') === -1) {
+            child.material = this.blackMetalMaterial;
+          } else {
+            child.material = this.whiteMaterial;
+          }
         }
       });
     }
