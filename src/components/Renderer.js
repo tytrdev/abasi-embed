@@ -127,14 +127,11 @@ export default class Renderer {
   resize() {
     this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight - 5);
+    this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
 
     if (this.models.current) {
       if (this.container.clientWidth < 1250) {
         const newScale = this.container.clientWidth / 1250.0;
-
-        console.log(newScale);
-  
         this.models.current.scale.x = newScale;
         this.models.current.scale.y = newScale;
         this.models.current.scale.z = newScale;

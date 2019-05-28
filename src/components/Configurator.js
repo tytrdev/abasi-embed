@@ -14,6 +14,7 @@ import Renderer from './Renderer';
 // Views
 import HomeView from './views/HomeView';
 import OptionView from './views/OptionView';
+import CustomerView from './views/CustomerView';
 import PaymentView from './views/PaymentView';
 import ConfirmationView from './views/ConfirmationView';
 import ConfigurationService from '../services/ConfigurationService';
@@ -29,12 +30,22 @@ export default class Configurator extends React.Component {
     this.state = {
       loading: true,
       parsing: false,
-      items: [],
+      percent: 0,
       mode: Modes.HOME,
       price: 0,
+      items: [],
       selections: {},
-      percent: 0,
       uuids: [],
+      customerInfo: {
+        firstName: '',
+        lastName: '',
+        email: '',
+        address1: '',
+        address2: '',
+        country: '',
+        state: '',
+        postalCode: '',
+      },
     };
 
     // Event bindings
@@ -45,11 +56,13 @@ export default class Configurator extends React.Component {
     this.configureSelection = this.configureSelection.bind(this);
     this.changeMode = this.changeMode.bind(this);
     this.handlePrice = this.handlePrice.bind(this);
+    this.handleOrder = this.handleOrder.bind(this);
     this.handleMain = this.handleMain.bind(this);
     this.submitOrder = this.submitOrder.bind(this);
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
+    this.updateCustomer = this.updateCustomer.bind(this);
 
     // Setup components to use for different views
     this.components = {
@@ -57,6 +70,7 @@ export default class Configurator extends React.Component {
       [Modes.OPTION]: OptionView,
       [Modes.PAYMENT]: PaymentView,
       [Modes.CONFIRMATION]: ConfirmationView,
+      [Modes.CUSTOMER]: CustomerView,
     };
 
     this.renderer = new Renderer(this.updatePercent);
@@ -140,7 +154,7 @@ export default class Configurator extends React.Component {
 
   componentDidUpdate() {
     // Update/re-attach renderer
-    if (this.state.mode !== Modes.CONFIRMATION) {
+    if (this.state.mode === Modes.HOME) {
       this.rendererContainer = document.getElementById('renderer-container');
       this.renderer.container = this.rendererContainer;
       this.rendererContainer.appendChild(this.renderer.getRendererElement());
@@ -235,8 +249,18 @@ export default class Configurator extends React.Component {
     this.changeMode(Modes.CONFIRMATION);
   }
 
+  handleOrder() {
+    this.changeMode(Modes.CUSTOMER);
+  }
+
   handleMain() {
     this.changeMode(Modes.HOME);
+  }
+
+  updateCustomer(customerInfo) {
+    this.setState({
+      customerInfo,
+    });
   }
 
   propogateEvent(event) {
@@ -285,9 +309,12 @@ export default class Configurator extends React.Component {
             handleMain={this.handleMain}
             data={this.state.selections}
             submitOrder={this.submitOrder}
+            handleOrder={this.handleOrder}
             updatePercent={this.updatePercent}
             uuids={this.state.uuids}
             setUuids={this.setUuids}
+            customerInfo={this.state.customerInfo}
+            updateCustomer={this.updateCustomer}
           />
         }
       </div>

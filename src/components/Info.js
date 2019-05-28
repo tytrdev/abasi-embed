@@ -35,11 +35,13 @@ export default class Info extends React.Component {
   }
 
   render() {
+    const bodyPrice = _.find(this.props.data, (v, k) => k === 'body').price;
+
     return (
       <div className="flex columns configurator-info">
         <h1>Order Confirmation</h1>
 
-        <h3>Larada 8 String Multiscale</h3>
+        <h3>Larada 8 String Multiscale - ${bodyPrice} USD</h3>
 
         <div className="configurator-selection">
           <div className="index"></div>
@@ -57,8 +59,12 @@ export default class Info extends React.Component {
         { this.getSelectionContent('finish', 'Finish', 7) }
         { this.getSelectionContent('battery', 'Battery Style', 8) }
 
+        <div className="order-total">
+          Total: ${this.props.price} USD
+        </div>
+
         <button type="button" onClick={this.props.submitOrder} className="submit-order-button">
-          Submit Order
+          Continue to Order Submission
         </button>
       </div>
     );

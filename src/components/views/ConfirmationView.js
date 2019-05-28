@@ -30,7 +30,7 @@ export default class ConfirmationView extends React.Component {
           </div>
 
           <div className="container option-info">
-            <Info data={this.props.data} submitOrder={this.props.submitOrder} />
+            <Info data={this.props.data} price={this.props.price} submitOrder={this.props.handleOrder} />
           </div>
         </div>
       </div>
@@ -42,5 +42,5 @@ ConfirmationView.propTypes = {
   getItems: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   handleMain: PropTypes.func.isRequired,
-  submitOrder: PropTypes.func.isRequired,
+  handleOrder: PropTypes.func.isRequired,
 };

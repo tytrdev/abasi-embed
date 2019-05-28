@@ -251,6 +251,9 @@ a {
       width: 100px;
       height: 50px;
       line-height: 50px; }
+  .configurator-info .order-total {
+    margin: 10px;
+    font-weight: 600; }
 
 .submit-order-button {
   border: none;
@@ -277,8 +280,7 @@ a {
   overflow-y: scroll; }
 
 html {
-  overflow: scroll;
-  overflow-x: hidden; }
+  overflow: hidden; }
 
 ::-webkit-scrollbar {
   width: 0px;
@@ -287,6 +289,29 @@ html {
 
 ::-webkit-scrollbar-thumb {
   background: #FF0000; }
+
+.customer-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 2em;
+  align-items: center; }
+  .customer-info .price {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.3em; }
+  .customer-info form {
+    display: flex;
+    flex-direction: column; }
+    .customer-info form label {
+      display: flex; }
+      .customer-info form label .label {
+        width: 250px;
+        margin-right: 10px;
+        text-align: right; }
+      .customer-info form label input {
+        margin-bottom: 10px;
+        width: 100%; }
 
 /**
 * ----------------------------------------------
