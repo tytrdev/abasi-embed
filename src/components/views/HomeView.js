@@ -8,7 +8,6 @@ import Price from '../Price';
 export default class HomeView extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.handleChange = this.handleChange.bind(this);
     this.changeMode = this.changeMode.bind(this);
   }
@@ -68,7 +67,5 @@ HomeView.propTypes = {
   renderer: PropTypes.object.isRequired,
   price: PropTypes.number.isRequired,
   loading: PropTypes.bool.isRequired,
-  canGoBack: PropTypes.bool.isRequired,
-  goBack: PropTypes.func.isRequired,
   handlePrice: PropTypes.func.isRequired,
 };

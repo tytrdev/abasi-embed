@@ -29,7 +29,7 @@ export default class Configurator extends React.Component {
     this.state = {
       loading: true,
       parsing: false,
-      items: [[]],
+      items: [],
       mode: Modes.HOME,
       price: 0,
       selections: {},
@@ -42,8 +42,6 @@ export default class Configurator extends React.Component {
     this.makeSelection = this.makeSelection.bind(this);
     this.propogateEvent = this.propogateEvent.bind(this);
     this.evaluatePrice = this.evaluatePrice.bind(this);
-    this.enableBackButton = this.enableBackButton.bind(this);
-    this.goBack = this.goBack.bind(this);
     this.configureSelection = this.configureSelection.bind(this);
     this.changeMode = this.changeMode.bind(this);
     this.handlePrice = this.handlePrice.bind(this);
@@ -61,7 +59,7 @@ export default class Configurator extends React.Component {
       [Modes.CONFIRMATION]: ConfirmationView,
     };
 
-    this.renderer = new Renderer(this.state.data, this.updatePercent);
+    this.renderer = new Renderer(this.updatePercent);
   }
 
   setUuids(id) {
@@ -88,7 +86,6 @@ export default class Configurator extends React.Component {
     return _.sortBy(transformedItems, (i) => {
       return Number.parseInt(i.position);
     });
-
   }
 
   async componentDidMount() {
@@ -112,14 +109,16 @@ export default class Configurator extends React.Component {
 
     // TODO: Fix this
     // Begin pricing module
-    const selections = await this.getInitialData();
-    this.evaluatePrice();
+    const selections = Configurator.getInitialData();
+    const price = this.evaluatePrice(selections);
+    console.log(price);
 
     this.setState({
-      items: [this.transformItems(items)],
+      items: this.transformItems(items),
       models,
       textures,
       selections,
+      price
     });
 
     const type = this.props.match.params.type;
@@ -129,10 +128,14 @@ export default class Configurator extends React.Component {
     }
 
     const model = ModelMap[type];
+    this.renderer.finishMode = 'transparent';
     await this.renderer.selectModel({ asset: model }, 'body');
-    await this.renderer.selectTexture({ asset: textureMap.maple, matte: true }, 'neck-full');
-    await this.renderer.selectTexture({ asset: textureMap.alder, matte: true }, 'finish');
+    await this.renderer.selectTexture({ asset: textureMap.maple, matte: true }, 'neck');
+    await this.renderer.selectTexture({ asset: textureMap.alderTransparent, transparentAsset: textureMap.alder, matte: true }, 'body-wood');
+    await this.renderer.selectTexture({ asset: textureMap.richlite, name:'richlite', matte: true }, 'fingerboard');
     await this.renderer.selectMaterial({ color: '#BFC1C2' }, 'hardware');
+    await this.renderer.selectFinish({ name: 'transparent', color: '#ffffff' });
+    await this.renderer.prepareModel();
   }
 
   componentDidUpdate() {
@@ -151,16 +154,7 @@ export default class Configurator extends React.Component {
 
   updatePercent(percent, loading, parsing) {
     if (percent >= 100) {
-      if (loading === undefined) {
-        // TODO: Loading fixes?
-        loading = false;
-        parsing = true;
-      }
-
-      if (parsing === true) {
-        loading = false;
-        parsing = false;
-      }
+      loading = false;
     }
 
     loading = loading === undefined ? true : loading;
@@ -171,127 +165,54 @@ export default class Configurator extends React.Component {
     });
   }
 
-  async getInitialData() {
-    const selections = {
+  static getInitialData() {
+    return {
       body: {type: 'model', asset: "c95aa5d830344811b8e726740199dda0", id: "6d65d532ad564be39484f29eb8526521", name: "Eight String", price: "2399"},
       ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", color: "#000", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
       neck: {asset: "812bdd08e0a0433a9eec59a835736bee", color: "#000", id: "b15f39a18970471e9b632e2b0085db13", name: "Maple", price: "0"},
       fingerboard: {asset: "4405833b559f462381727a1b538182ed", color: "#000", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
-      sidedots: {color: "#000", id: "4261991f913648ab9cdee1a50e55a0a3", name: "White", price: "0"},
+      sidedots: {color: "#000", id: "4261991f913648ab9cdee1a50e55a0a3", name: "Standard", price: "0"},
       hardware: {color: "#000", id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
       battery: {color: "#000", id: "6370194e256a4ae28264bcd0063abf6a", name: "Default 9V Battery", price: "0"},
       pickups: {color: "#000", id: "aef2b3e099d64a23a813d01be244c855", name: "White", price: "0"},
       finish: {color: "#fcfcfc", id: "af47f49cfc0e4a6e9f7954d3e1d54948", name: "Natural Transparent", price: "0"},
     };
-
-    for (const selection in selections) {
-      const { type, key } = selection;
-
-      try {
-        switch(type) {
-          case 'model':
-            console.log('model at:', key);
-            await this.renderer.selectModel(selection, key);
-            break;
-          case 'material':
-            console.log('material at:', key);
-            await this.renderer.selectMaterial(selection, key);
-            break;
-          case 'texture':
-            console.log('texture at:', key);
-            await this.renderer.selectTexture(selection, key);
-            break;
-          case 'finish':
-            console.log('finish at:', key);
-            await this.renderer.selectFinish(selection, key);
-            break;
-          default:
-            console.log('This is something else entirely');
-            break;
-        }
-      } catch (ex) {
-        console.log(ex);
-        toast.error('Hmm...having trouble loading that asset');
-      }
-    }
-
-    const price = this.evaluatePrice(selections);
-
-    this.setState({
-      price,
-    });
-
-    return selections;
   }
 
   async makeSelection(selection, option) {
-    // switch (selection.type) {
-    //   case SelectionTypes.MENU:
-    //   case SelectionTypes.MODEL:
-    //   case SelectionTypes.MATERIAL:
-    //   case SelectionTypes.TEXTURE:
-    //   case SelectionTypes.FINISH:
-    //     this.performUpdate(selection);
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    // TODO: Simplify
     this.configureSelection(selection, option);
   }
 
   async configureSelection(selection, option) {
-    console.log(selection, option);
-
     const { selections } = this.state;
     const { key, type } = selection;
-    console.log(key, type)
 
-    this.setState({
-      loading: true,
-    });
+    // this.setState({
+    //   loading: true,
+    // });
 
     try {
-      switch(type) {
-        case 'model':
-          console.log('model at:', key);
-          await this.renderer.selectModel(option, key);
-          break;
-        case 'material':
-          console.log('material at:', key);
-          await this.renderer.selectMaterial(option, key);
-          break;
-        case 'texture':
-          console.log('texture at:', key);
-          await this.renderer.selectTexture(option, key);
-          break;
-        case 'finish':
-          console.log('finish at:', key);
-          await this.renderer.selectFinish(option, key);
-          break;
-        default:
-          console.log('This is something else entirely');
-          break;
-      }
+      await this.renderer.updateSelections(type, key, option);
     } catch (ex) {
       console.log(ex);
       toast.error('Hmm...having trouble loading that asset');
     }
 
-    selections[key] = selection;
+    selections[key] = option;
     const price = this.evaluatePrice(selections);
 
     this.setState({
       selections,
-      loading: false,
+      // loading: false,
       price,
     });
   }
 
 
-  evaluatePrice() {
-    return Number.parseInt(_.map(this.state.selections, s => s.price).reduce((p, c) => {
+  evaluatePrice(selections) {
+    console.log(selections);
+
+    return Number.parseInt(_.map(selections, s => s.price).reduce((p, c) => {
       p = Number.parseInt(p);
       c = Number.parseInt(c);
 
@@ -300,25 +221,7 @@ export default class Configurator extends React.Component {
   }
 
   getItems() {
-    return this.state.items[this.state.items.length - 1];
-  }
-
-  enableBackButton() {
-    return this.state.items.length > 1;
-  }
-
-  goBack() {
-    const { items } = this.state;
-
-    if (items.length > 1) {
-      items.pop();
-
-      this.setState({
-        items,
-      });
-    } else {
-      console.log('Should not be trying to go back...');
-    }
+    return this.state.items;
   }
 
   // Modal utilities
@@ -378,8 +281,6 @@ export default class Configurator extends React.Component {
             makeSelection={this.makeSelection}
             price={this.state.price}
             loading={this.state.loading}
-            canGoBack={this.enableBackButton()}
-            goBack={this.goBack}
             handlePrice={this.handlePrice}
             handleMain={this.handleMain}
             data={this.state.selections}

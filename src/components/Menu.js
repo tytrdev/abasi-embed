@@ -16,20 +16,22 @@ class Menu extends React.Component {
 
     this.getOption = this.getOption.bind(this);
     this.getItem = this.getItem.bind(this);
-
-    console.log('Creating menu');
   }
 
   getOption(item, option, i) {
+    const showPrice = Number.parseInt(option.price) > 0;
+
     return (
       <span key={`menu-item-option-${i}`} className="item-option" onClick={() => this.props.callback(item, option)}>
         <span className="item-option-name">
           { option.name }
         </span>
 
-        <span className="item-option-price">
-          ${ option.price }
-        </span>
+        { showPrice &&
+          <span className="item-option-price">
+            + ${ option.price }
+          </span>
+        }
       </span>
     )
   }

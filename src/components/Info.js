@@ -39,6 +39,8 @@ export default class Info extends React.Component {
       <div className="flex columns configurator-info">
         <h1>Order Confirmation</h1>
 
+        <h3>Larada 8 String Multiscale</h3>
+
         <div className="configurator-selection">
           <div className="index"></div>
           <div className="title">Line Item</div>
@@ -46,15 +48,14 @@ export default class Info extends React.Component {
           <div className="price">Price</div>
         </div>
 
-        { this.getSelectionContent('body', 'Body Style', 1) }
-        { this.getSelectionContent('body-wood', 'Body Wood', 2) }
-        { this.getSelectionContent('neck', 'Neck Wood', 3) }
-        { this.getSelectionContent('fingerboard', 'Fingerboard Material', 4) }
-        { this.getSelectionContent('sidedots', 'Inlay Material', 5) }
-        { this.getSelectionContent('hardware', 'Hardware Style', 6) }
-        { this.getSelectionContent('battery', 'Battery Style', 7) }
-        { this.getSelectionContent('pickups', 'Pickup Covers', 8) }
-        { this.getSelectionContent('finish', 'Finish', 9) }
+        { this.getSelectionContent('body-wood', 'Body Wood', 1) }
+        { this.getSelectionContent('neck', 'Neck Wood', 2) }
+        { this.getSelectionContent('fingerboard', 'Fingerboard Material', 3) }
+        { this.getSelectionContent('sidedots', 'Side Dot Material', 4) }
+        { this.getSelectionContent('hardware', 'Hardware Style', 5) }
+        { this.getSelectionContent('pickups', 'Pickup Covers', 6) }
+        { this.getSelectionContent('finish', 'Finish', 7) }
+        { this.getSelectionContent('battery', 'Battery Style', 8) }
 
         <button type="button" onClick={this.props.submitOrder} className="submit-order-button">
           Submit Order

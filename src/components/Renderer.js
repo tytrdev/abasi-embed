@@ -1,13 +1,10 @@
 import OBJLoader from 'three-obj-loader';
-import OrbitControls from 'three-orbitcontrols';
 import FBXLoader from 'three-fbxloader-offical';
+import OrbitControls from 'three-orbitcontrols';
 import _ from 'lodash';
-import Axios from 'axios';
 
-import Events from '../constants/events';
-import LayerMap from '../constants/layer-map';
+import Groups from '../constants/groups';
 import Materials from './helpers/Materials';
-import { resolve } from 'dns';
 
 const Three = require('three');
 
@@ -17,15 +14,14 @@ function colorToSigned24Bit(s) {
   return (parseInt(s.substr(1), 16) << 8) / 256;
 }
 
+const STANDARD = 'standard';
+const TRANSPARENT = 'transparent';
+const PREMIUM = 'premium';
+const ARTSERIES = 'artseries';
+
 export default class Renderer {
-  constructor(data, updatePercent) {
+  constructor(updatePercent) {
     this.updatePercent = updatePercent;
-
-    Three.Cache.enabled = true;
-
-    this.TEXTURE_ANISOTROPY = 32;
-
-    this.data = data;
 
     // Event bindings
     this.animate = this.animate.bind(this);
@@ -38,31 +34,48 @@ export default class Renderer {
     this.selectTexture = this.selectTexture.bind(this);
     this.selectMaterial = this.selectMaterial.bind(this);
 
-    // Need to set container on instance
     this.renderer = new Three.WebGLRenderer({ alpha: true, antialias: true, precision: 'highp' });
-    // this.renderer.setClearColor(0x000000, 0.5);
-    // this.renderer.setClearColor(0xffffff, 0);
 
     this.container = undefined;
     this.textureLoader = new Three.TextureLoader();
-    this.modelLoader = new Three.OBJLoader();
-
-    this.models = {};
-    this.materials = {};
-    this.textures = {};
+    this.modelLoader = new FBXLoader();
 
     const reflectionCube = Materials.envMap();
     reflectionCube.encoding = Three.GammaEncoding;
     this.reflectionCube = reflectionCube;
 
-    this.metalMaterial = Materials.metalWithColor(reflectionCube, 0x808080);
-    this.satinMetalMaterial = Materials.withColor(reflectionCube, 0xBFC1C2);
-    this.darkMetalMaterial = Materials.metalWithColor(reflectionCube, 0x222222);
-    this.blackMetalMaterial = Materials.metalWithColor(reflectionCube, 0x272222);
-    this.lighterMetalMaterial = Materials.metalWithColor(reflectionCube, 0x333333);
+    this.finishMode = STANDARD;
 
-    this.brownMaterial = Materials.withColor(reflectionCube, 0x272222);
-    this.whiteMaterial = Materials.withColor(reflectionCube, 0xD8D5D5);
+    this.models = {};
+    this.textures = {};
+    this.materials = {
+      // Gloss Materials
+      metalMaterial: Materials.metalWithColor(reflectionCube, 0x808080),
+      darkMetalMaterial: Materials.metalWithColor(reflectionCube, 0x222222),
+      blackMetalMaterial: Materials.metalWithColor(reflectionCube, 0x272222),
+      lighterMetalMaterial: Materials.metalWithColor(reflectionCube, 0x333333),
+      
+      // Satin materials
+      satinMetalMaterial: Materials.withColor(reflectionCube, 0xBFC1C2),
+      brownMaterial: Materials.withColor(reflectionCube, 0x272222),
+      whiteMaterial: Materials.withColor(reflectionCube, 0xF5EEEE),
+      pureWhiteMaterial: Materials.withColor(reflectionCube, 0xffffff),
+
+      // Finish/Body Materials
+      batteryMaterial: Materials.withoutColor(reflectionCube),
+      standardMaterial: Materials.withoutColor(reflectionCube),
+      transparentMaterial: Materials.withoutColor(reflectionCube),
+      outerPremiumMaterial: Materials.metalWithoutColor(reflectionCube),
+      innerPremiumMaterial: Materials.withoutColor(reflectionCube),
+      artSeriesMaterial: Materials.withoutColor(reflectionCube),
+      neckMaterial: Materials.withoutColor(reflectionCube),
+      pickupMaterial: Materials.withoutColor(reflectionCube),
+      headStockMaterial: Materials.withoutColor(reflectionCube),
+      fretboardMaterial: Materials.withoutColor(reflectionCube),
+      sidedotMaterial: Materials.withoutColor(reflectionCube),
+      inlayMaterial: Materials.withoutColor(reflectionCube),
+      hardwareMaterial: Materials.withColor(reflectionCube, 0xffffff),
+    };
   }
 
   getRendererElement() {
@@ -84,22 +97,18 @@ export default class Renderer {
     this.controls.enablePan = false;
     
     const ambient = new Three.AmbientLight( 0xffffff, 1.0 );
-    this.scene.add( ambient );
+    this.scene.add(ambient);
 
-    // const light = new Three.HemisphereLight( 0xffffff, 0xffffff, 0.3);
-    // this.scene.add(light);
-
-
-    const lightModifier = 20;
+    const lightModifier = 200;
     const positions = [
-      // [1, 1, 1, 0.3],
+      // [1, 1, 1, 0.1],
       [1, 1, -1, 0.3],
-      // [1, -1, 1, 0.3],
+      // [1, -1, 1, 0.1],
       [1, -1, -1, 0.3],
-      // [-1, 1, 1, 0.3],
-      [-1, 1, -1, 0.3],
+      // [-1, 1, 1, 0.1],
+      [-1, 1, -1, 0.2],
       // [-1, -1, 1, 0.1],
-      [-1, -1, -1, 0.1],
+      [-1, -1, -1, 0.3],
     ];
     
     _.each(positions, data => {
@@ -119,6 +128,22 @@ export default class Renderer {
     this.camera.aspect = this.container.clientWidth / this.container.clientHeight;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(this.container.clientWidth, this.container.clientHeight - 5);
+
+    if (this.models.current) {
+      if (this.container.clientWidth < 1250) {
+        const newScale = this.container.clientWidth / 1250.0;
+
+        console.log(newScale);
+  
+        this.models.current.scale.x = newScale;
+        this.models.current.scale.y = newScale;
+        this.models.current.scale.z = newScale;
+      } else {
+        this.models.current.scale.x = 1.0;
+        this.models.current.scale.y = 1.0;
+        this.models.current.scale.z = 1.0;
+      }
+    }
   }
 
   /* eslint-disable no-param-reassign */
@@ -154,68 +179,136 @@ export default class Renderer {
     this.animate();
   }
 
-  prepareModel(model) {
-    // TODO: Prepare model with actual stuff
-    // This is really important
-    if (this.models.current) {
-      this.scene.remove(this.models.current);
+  prepareModel() {
+    if (!this.models.current) {
+      throw new Error('Must have a model to perform updates');
     }
 
-    this.models.current = model;
+    const model = this.models.current;
 
     model.traverse( child => {
       if ( child instanceof Three.Mesh ) {
+        console.log(child.name);
         switch (child.name) {
-          case 'Strings':
-          case 'FRETS001':          
-          case 'Screws001':
-            child.material = this.satinMetalMaterial;
+          case Groups.Tuners:
+          case Groups.Bridge:
+          case Groups.Round_Knob_on_body:
+          case Groups.Tuner_Gold_Gear:
+          case Groups.Tuner_Screws:
+          // case Groups: Metal ring on tuner?
+            child.material = this.materials.hardwareMaterial;
             break;
-          case 'PICKUPS':
-            child.material = this.whiteMaterial;
+          case Groups.Strings:
+          case Groups.Frets:          
+          case Groups.Screws:
+          case Groups.BatteryScrews:
+            child.material = this.materials.satinMetalMaterial;
             break;
-          case 'Strap_holder':
-          case 'Bridge':
-            child.material = this.blackMetalMaterial;
+          case Groups.Pickups:
+            child.material = this.materials.pickupMaterial;
             break;
-          case 'Fret_dots_Big_side':
-          case 'Fret_Dots_Small_side':
-          case 'Abasi_Logo':
+          case Groups.Strap_holders:
+            child.material = this.materials.blackMetalMaterial;
+            break;
+          case Groups.Fret_Dots_Small_side:
+            child.material = this.materials.sidedotMaterial;
+            break;
+          case Groups.Fret_dots_Big_side:
+            child.material = this.materials.inlayMaterial;
+            break;
+          case Groups.Logo:
           case 'Tuner_White_rubber':
-            child.material = this.whiteMaterial;
+            child.material = this.materials.whiteMaterial;
             break;
-          case 'String_ends':
-          case 'Tuners':
-            child.material = this.metalMaterial;
+          case Groups.String_Ends:
+            child.material = this.materials.metalMaterial;
             break;
-          case 'String_holder':
-            child.material = this.metalMaterial;
+          case Groups.String_Holder:
+            child.material = this.materials.metalMaterial;
             break;
-          case 'BODY':
-          case 'NECK':
-            child.material = this.darkMetalMaterial;
+          case Groups.Body:
+            if (this.finishMode === TRANSPARENT) {
+              child.material = this.materials.transparentMaterial;
+            }
+
+            if (this.finishMode === STANDARD) {
+              child.material = this.materials.standardMaterial;
+            }
+
+            if (this.finishMode === PREMIUM) {
+              child.material = this.materials.outerPremiumMaterial;
+            }
+
+            if (this.finishMode === ARTSERIES) {
+              child.material = this.materials.outerPremiumMaterial;
+            }
             break;
-          case 'FretBoard':
-            child.material = this.brownMaterial;
+          case Groups.BodyTop:
+            if (this.finishMode === TRANSPARENT) {
+              child.material = this.materials.transparentMaterial;
+            }
+  
+            if (this.finishMode === STANDARD) {
+              child.material = this.materials.standardMaterial;
+            }
+
+            if (this.finishMode === PREMIUM) {
+              child.material = this.materials.innerPremiumMaterial;
+            }
+
+            if (this.finishMode === ARTSERIES) {
+              child.material = this.materials.artSeriesMaterial;
+            }
             break;
-          case 'Input_Jack_Bottom_Body':
-          case 'Battery_Bottom':
-            child.material = this.lighterMetalMaterial;
+          case Groups.HeadTop:
+            //TODO: CHange this
+            child.material = this.materials.headStockMaterial;
+            break;
+          case Groups.Neck:
+            child.material = this.materials.neckMaterial;
+            break;
+          case Groups.Fretboard:
+            child.material = this.materials.fretboardMaterial;
+            break;
+          case Groups.Cable_Input:
+            child.material = this.materials.lighterMetalMaterial;
+            break;
+          case Groups.BatteryCover:
+            if (this.finishMode === ARTSERIES) {
+              child.material = this.materials.artSeriesMaterial;
+            } else {
+              child.material = this.materials.lighterMetalMaterial;
+            }
+
             break;
           default:
-            child.material = this.blackMetalMaterial;
+            child.material = this.materials.blackMetalMaterial;
             break;
         }
-
-        // child.geometry.computeVertexNormals(true);
       }
     });
+  }
 
-    // model.scale.x = 0.8;
-    // model.scale.y = 0.8;
-    // model.scale.z = 0.8;
-    model.rotation.y = Math.PI;
-    this.scene.add(model);
+  async updateSelections(type, key, option) {
+    switch(type) {
+      case 'material':
+        console.log('material at:', key);
+        await this.selectMaterial(option, key);
+        break;
+      case 'texture':
+        console.log('texture at:', key);
+        await this.selectTexture(option, key);
+        break;
+      case 'finish':
+        console.log('finish at:', key);
+        await this.selectFinish(option, key);
+        break;
+      default:
+        console.log('This is something else entirely');
+        break;
+    }
+
+    this.prepareModel();
   }
 
   // Configurator utilities for selections
@@ -224,132 +317,147 @@ export default class Renderer {
 
     await new Promise((resolve, reject) => {
       try {
-        this.modelLoader.load(model.location, obj => {
-          this.prepareModel(obj);
+        this.modelLoader.load(model.location, async obj => {
+          obj.rotation.y = Math.PI;
+          this.models.current = obj;
+          this.scene.add(obj);
+          this.prepareModel();
           resolve('Success');
-        }, (progress) => this.updatePercent((progress.loaded / progress.total * 100)), true, false);
+        }, (progress) => {
+          const percent = (progress.loaded / progress.total) * 100;
+          console.log(progress, percent);
+          this.updatePercent(percent, true, false);
+        });
+
+        // (progress) => this.updatePercent((progress.loaded / progress.total * 100)), true, false
       } catch (ex) {
-        console.log(ex);
+        reject(ex);
       }
     })
   }
 
   async selectMaterial(selection, key) {
-    const layerKey = LayerMap[key];
+    // TODO: Handle updating material
+    console.log(selection);
 
-    this.models.current.traverse((child) => {
-      console.log(child);
-      if (child instanceof Three.Mesh && layerKey.indexOf(child.name) !== -1) {
-        if (selection.matte || child.name === 'PICKUPS') {
-          child.material = Materials.withColor(this.reflectionCube, colorToSigned24Bit(selection.color));
-        } else {
-          child.material = Materials.metalWithColor(this.reflectionCube, colorToSigned24Bit(selection.color));
-        }
-      }
-    });
+    const color = colorToSigned24Bit(selection.color);
+
+    switch(key) {
+      case 'hardware':
+        this.materials.hardwareMaterial = Materials.metalWithColor(this.reflectionCube, color);
+        break;
+      case 'sidedots':
+        this.materials.sidedotMaterial = Materials.withColor(this.reflectionCube, color);
+        break;
+      case 'pickup-covers':
+        this.materials.pickupMaterial = Materials.withColor(this.reflectionCube, color);
+        break;
+      default:
+        console.log('Cannot determine what material to modify...');
+        break;
+    }
   }
 
   async selectTexture(selection, key) {
+    console.log(selection);
     const asset = _.find(this.assets.textures, t => t.id === selection.asset);
-    const texture = Materials.loadTexture(asset.location, this.textureLoader, this.renderer);
+    let texture;
 
-    const layerKey = LayerMap[key];
+    if (!this.textures[asset.filename]) {
+      texture = Materials.loadTexture(asset.location, this.textureLoader, this.renderer);
+      this.textures[asset.filename] = texture;
+    } else {
+      texture = this.textures[asset.filename];
+    }
+    
+    console.log(key);
 
-    this.models.current.traverse((child) => {
-      if (child instanceof Three.Mesh && (child.name === layerKey || layerKey.indexOf(child.name) !== -1)) {
-        if (selection.matte) {
-          child.material = Materials.withoutColor(this.reflectionCube);
+    // TODO: Handle updating material with texture
+    switch(key) {
+      case 'body-wood':
+        this.materials.standardMaterial = Materials.withoutColor(this.reflectionCube);
+        this.materials.standardMaterial.map = texture;
+
+        if (selection.transparentAsset) {
+          const transparentAsset = _.find(this.assets.textures, t => t.id === selection.transparentAsset);
+          const transparentTexture = Materials.loadTexture(transparentAsset.location, this.textureLoader, this.renderer);
+  
+          this.materials.transparentMaterial = Materials.withoutColor(this.reflectionCube);
+          this.materials.transparentMaterial.map = transparentTexture;
+        }
+        break;
+      case 'neck':
+        this.materials.neckMaterial = Materials.withoutColor(this.reflectionCube);
+        this.materials.neckMaterial.map = texture;
+        this.materials.headStockMaterial = this.materials.neckMaterial;
+        break;
+      case 'fingerboard':
+        this.materials.fretboardMaterial = Materials.withoutColor(this.reflectionCube);
+        this.materials.fretboardMaterial.map = texture;
+
+        if (selection.name.toLowerCase().indexOf('richlite') !== -1) {
+          this.materials.inlayMaterial = Materials.withColor(this.reflectionCube, 0xffffff);
         } else {
-          child.material = Materials.withoutColor(this.reflectionCube);
+          this.materials.inlayMaterial = Materials.withColor(this.reflectionCube, 0x000000);
         }
-
-        child.material.map = texture;
-        this.bodyTexture = texture;
-
-        if ((child.name === 'BODY' || child.name === 'Body_top') && this.bodyMaterial) {
-          child.material = this.bodyMaterial;
-          child.material.map = texture;
-        }
-      }
-    });
+        break;
+      default:
+        console.log('Cannot determine what texture to modify...');
+        break;
+    }
   }
 
   async selectFinish(selection, key) {
     console.log('Configuring new Finish');
 
     const { type } = selection;
-    let material;
-    let outerMaterial;
+
+    const color = colorToSigned24Bit(selection.color);
+
+    // Default battery cover
+    this.materials.batteryMaterial = this.materials.darkMetalMaterial;
 
     switch(type) {
       case 'standard':
-        material = this.getStandardMaterial(selection);
-        material.map = this.bodyTexture;
-        outerMaterial = material;
+        if (selection.name.toLowerCase().indexOf('transparent') !== -1) {
+          this.finishMode = TRANSPARENT;
+        } else {
+          this.finishMode = STANDARD;
+        }
+
+        const map = this.materials.standardMaterial.map;
+        this.materials.standardMaterial = Materials.withColor(this.reflectionCube, color);
+        this.materials.standardMaterial.map = map;
+
+        const headStockMap = this.materials.headStockMaterial.map;
+        this.materials.headStockMaterial = Materials.withoutColor(this.reflectionCube);
+        this.materials.headStockMaterial.map = headStockMap;
         break;
       case 'premium':
-        material = this.getPremiumMaterial(selection, true);
-        outerMaterial = this.getPremiumMaterial(selection, false);
+        this.finishMode = PREMIUM;
+
+        this.materials.outerPremiumMaterial = Materials.metalWithColor(this.reflectionCube, color);
+        this.materials.innerPremiumMaterial = Materials.withColor(this.reflectionCube, color);
         break;
       case 'artseries':
-        material = this.getArtSeriesMaterial(selection);
-        outerMaterial = this.getPremiumMaterial(selection);
+        this.finishMode = ARTSERIES;
+
+        this.materials.outerPremiumMaterial = Materials.artSeries(this.reflectionCube, color);
+        this.materials.artSeriesMaterial = Materials.withoutColor(this.reflectionCube);
+
+        const asset = _.find(this.assets.textures, t => t.id === selection.asset);
+        this.materials.artSeriesMaterial.map = Materials.loadTexture(asset.location, this.textureLoader, this.renderer);
+
+        const newLight = selection.name.toLowerCase().indexOf('light') !== -1;
+
+        if (newLight) {
+          this.materials.headStockMaterial = Materials.withColor(this.reflectionCube, 0xffffff);
+        } else {
+          this.materials.headStockMaterial = Materials.withColor(this.reflectionCube, 0x000000);
+        }
+
+        this.materials.batteryMaterial = this.materials.artSeriesMaterial;
         break;
     }
-
-    this.bodyMaterial = outerMaterial;
-
-    if (material && outerMaterial) {
-      const layerKey = LayerMap[key];
-  
-      this.models.current.traverse((child) => {
-        // if (child instanceof Three.Mesh && (child.name === layerKey || layerKey.indexOf(child.name) !== -1)) {
-        //   child.material = material;
-        // }
-
-        if (child.name === 'BODY') {
-          child.material = outerMaterial;
-        }
-
-        if (child.name === 'Body_top') {
-          child.material = material;
-        }
-
-        if (type === 'artseries' && (child.name === 'Battery_Bottom' || child.name === 'Input_Jack_Bottom_Body')) {
-          child.material = material;
-        }
-
-        if (type === 'artseries' && child.name === 'Head_Top') {
-          if (selection.name.toLowerCase().indexOf('light') === -1) {
-            child.material = this.blackMetalMaterial;
-          } else {
-            child.material = this.whiteMaterial;
-          }
-        }
-      });
-    }
-  }
-
-  getStandardMaterial(selection) {
-    // TODO: Preserve texture
-    return Materials.withColor(this.reflectionCube, colorToSigned24Bit(selection.color));
-  }
-
-  getPremiumMaterial(selection, satin) {
-    if (satin) {
-      return Materials.withColor(this.reflectionCube, colorToSigned24Bit(selection.color));
-    } else {
-      return Materials.metalWithColor(this.reflectionCube, colorToSigned24Bit(selection.color));
-    }
-  }
-
-  getArtSeriesMaterial(selection) {
-    const asset = _.find(this.assets.textures, t => t.id === selection.asset);
-    const texture = Materials.loadTexture(asset.location, this.textureLoader, this.renderer);
-
-    const material = Materials.withoutColor(this.reflectionCube);
-    material.map = texture;
-
-    return material;
   }
 }

@@ -20,13 +20,13 @@ class Materials {
     return new Three.MeshStandardMaterial( {
       color: color,
   
-      roughness: 0.3,
+      roughness: 0.4,
       metalness: 0.5,
   
       envMap: reflectionCube, // important -- especially for metals!
       
       aoMapIntensity: 1.0,
-      envMapIntensity: 0.8,
+      envMapIntensity: 0.7,
       // displacementScale: 2.436143, // from original model
       normalScale: 1.0,
 
@@ -65,9 +65,29 @@ class Materials {
   static withoutColor(reflectionCube) {
     return new Three.MeshStandardMaterial( {
       envMap: reflectionCube,
-      roughness: 0.8,
-      metalness: 0.3,
+      roughness: 0.6,
+      metalness: 0.5,
+      aoMapIntensity: 0.8,
+      envMapIntensity: 0.8,
       flatShading: false,
+    });
+  }
+
+  static artSeries(reflectionCube, color) {
+    return new Three.MeshStandardMaterial( {
+      color: color,
+  
+      roughness: 0.4,
+      metalness: 0.4,
+  
+      envMap: reflectionCube, // important -- especially for metals!
+      
+      aoMapIntensity: 1.0,
+      envMapIntensity: 0.7,
+      // displacementScale: 2.436143, // from original model
+      normalScale: 1.0,
+
+      // flatShading: false,
     });
   }
 
