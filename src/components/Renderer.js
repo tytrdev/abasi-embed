@@ -96,25 +96,43 @@ export default class Renderer {
     this.controls.enableZoom = true;
     this.controls.enablePan = false;
     
-    const ambient = new Three.AmbientLight( 0xffffff, 1.0 );
+    const AMBIENT_INTENSITY = 1.0;
+    const LIGHT_INTENSITY = 0.28;
+
+    const ambient = new Three.AmbientLight( 0xffffff, AMBIENT_INTENSITY );
     this.scene.add(ambient);
 
     const lightModifier = 200;
     const positions = [
       // [1, 1, 1, 0.1],
-      [1, 1, -1, 0.3],
+      [1, 1, -1, LIGHT_INTENSITY],
       // [1, -1, 1, 0.1],
-      [1, -1, -1, 0.3],
+      [1, -1, -1, LIGHT_INTENSITY],
       // [-1, 1, 1, 0.1],
-      [-1, 1, -1, 0.2],
+      [-1, 1, -1, LIGHT_INTENSITY],
       // [-1, -1, 1, 0.1],
-      [-1, -1, -1, 0.3],
+      [-1, -1, -1, LIGHT_INTENSITY],
     ];
     
     _.each(positions, data => {
       const light = new Three.DirectionalLight(0xffffff, data[3]);
       light.position.set(data[0] * lightModifier, data[1] * lightModifier, data[2] * lightModifier);
       light.lookAt(0, 0, 0);
+
+      light.castShadow = true;
+      light.shadowCameraVisible = true;
+      light.shadowCameraTop = 2000;
+      light.shadowCameraBottom = -2000;
+      light.shadowCameraRight = 2000;
+      light.shadowCameraLeft = -2000;
+      light.shadowCameraFov = 45;
+      light.shadowMapBias = 0.0039;
+      light.shadowMapDarkness = 0.05;
+      light.shadowDarkness = 0.25;
+      light.shadowBias = 0.001;
+      light.shadowCameraNear = 0;
+      light.shadowCameraFar = 2500;
+
       this.scene.add(light);
     });
 

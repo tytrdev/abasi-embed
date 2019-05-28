@@ -309,7 +309,7 @@ html {
         width: 250px;
         margin-right: 10px;
         text-align: right; }
-      .customer-info form label input {
+      .customer-info form label input, .customer-info form label textarea {
         margin-bottom: 10px;
         width: 100%; }
 

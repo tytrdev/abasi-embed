@@ -21,6 +21,7 @@ import ConfigurationService from '../services/ConfigurationService';
 import AssetService from '../services/AssetService';
 import { ClipLoader } from 'react-spinners';
 import textureMap from '../constants/texture-map';
+import OrderService from '../services/OrderService';
 
 export default class Configurator extends React.Component {
   constructor(props) {
@@ -36,16 +37,6 @@ export default class Configurator extends React.Component {
       items: [],
       selections: {},
       uuids: [],
-      customerInfo: {
-        firstName: '',
-        lastName: '',
-        email: '',
-        address1: '',
-        address2: '',
-        country: '',
-        state: '',
-        postalCode: '',
-      },
     };
 
     // Event bindings
@@ -62,7 +53,6 @@ export default class Configurator extends React.Component {
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
-    this.updateCustomer = this.updateCustomer.bind(this);
 
     // Setup components to use for different views
     this.components = {
@@ -257,19 +247,23 @@ export default class Configurator extends React.Component {
     this.changeMode(Modes.HOME);
   }
 
-  updateCustomer(customerInfo) {
-    this.setState({
-      customerInfo,
-    });
-  }
-
   propogateEvent(event) {
     // TODO: Event handler code for renderer events
     this.renderer.handleEvent(event, this.state.data);
   }
 
-  async submitOrder() {
+  async submitOrder(purchaserInfo) {
     console.log('Submitting order...');
+    
+    const data = {
+      status: 'Processing',
+      specs: this.state.selections,
+      purchaserInfo,
+      total: this.state.price,
+    };
+
+    await OrderService.create(data);
+
     toast.success('Successfully submitted order!');
   }
 
@@ -313,8 +307,6 @@ export default class Configurator extends React.Component {
             updatePercent={this.updatePercent}
             uuids={this.state.uuids}
             setUuids={this.setUuids}
-            customerInfo={this.state.customerInfo}
-            updateCustomer={this.updateCustomer}
           />
         }
       </div>

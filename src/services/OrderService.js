@@ -48,6 +48,11 @@ class OrderService extends Service {
     return order;
   }
 
+  async create(data) {
+    console.log(data);
+    await DB.collection('orders').doc().set(data);
+  }
+
   async updateNotes(order) {
     await DB.collection('orders').doc(order.id).set(order);
   }

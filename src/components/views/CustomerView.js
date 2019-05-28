@@ -8,16 +8,32 @@ export default class CustomerView extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.changeMode = this.changeMode.bind(this);
     this.submitOrder = this.submitOrder.bind(this);
+
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      address1: '',
+      address2: '',
+      country: '',
+      state: '',
+      postalCode: '',
+      notes: '',
+    };
   }
 
   submitOrder(event) {
     event.preventDefault();
 
-    this.props.submitOrder();
+    this.props.submitOrder(this.state);
   }
 
   handleChange(event) {
-    // TODO: Handle updating customer data
+    const { name, value } = event.target;
+
+    this.setState({
+      [name]: value,
+    });
   }
 
   changeMode(mode) {
@@ -51,6 +67,7 @@ export default class CustomerView extends React.Component {
                   placeholder="First Name"
                   name="firstName"
                   onChange={this.handleChange}
+                  value={this.state.firstName}
                   required
                 />
               </label>
@@ -63,6 +80,7 @@ export default class CustomerView extends React.Component {
                   placeholder="Last Name"
                   name="lastName"
                   onChange={this.handleChange}
+                  value={this.state.lastName}
                   required
                 />
               </label>
@@ -75,6 +93,7 @@ export default class CustomerView extends React.Component {
                   placeholder="Email Address"
                   name="email"
                   onChange={this.handleChange}
+                  value={this.state.email}
                   required
                 />
               </label>
@@ -87,6 +106,7 @@ export default class CustomerView extends React.Component {
                   placeholder="Address 1"
                   name="address1"
                   onChange={this.handleChange}
+                  value={this.state.address1}
                   required
                 />
               </label>
@@ -99,6 +119,20 @@ export default class CustomerView extends React.Component {
                   placeholder="Address 2 (optional)"
                   name="address2"
                   onChange={this.handleChange}
+                  value={this.state.address2}
+                />
+              </label>
+
+              <label htmlFor="city">
+                <span className="label">City:</span>
+
+                <input
+                  type="text"
+                  placeholder="City"
+                  name="city"
+                  onChange={this.handleChange}
+                  value={this.state.city}
+                  required
                 />
               </label>
 
@@ -107,9 +141,10 @@ export default class CustomerView extends React.Component {
 
                 <input
                   type="text"
-                  placeholder="Last Name"
+                  placeholder="State"
                   name="state"
                   onChange={this.handleChange}
+                  value={this.state.state}
                   required
                 />
               </label>
@@ -122,10 +157,23 @@ export default class CustomerView extends React.Component {
                   placeholder="Postal Code"
                   name="postalCode"
                   onChange={this.handleChange}
+                  value={this.state.postalCode}
                   required
                 />
               </label>
 
+              <label htmlFor="notes">
+                <span className="label">Notes:</span>
+                
+                <textarea
+                  type="text"
+                  placeholder="Type anything you would like to tell the builders here"
+                  name="notes"
+                  onChange={this.handleChange}
+                  value={this.state.notes}
+                />
+              </label>
+              
               <button type="submit" className="submit-order-button">
                 Submit Order
               </button>
