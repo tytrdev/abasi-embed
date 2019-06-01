@@ -41,7 +41,6 @@ export default class Configurator extends React.Component {
 
     // Event bindings
     this.getItems = this.getItems.bind(this);
-    this.makeSelection = this.makeSelection.bind(this);
     this.propogateEvent = this.propogateEvent.bind(this);
     this.evaluatePrice = this.evaluatePrice.bind(this);
     this.configureSelection = this.configureSelection.bind(this);
@@ -53,6 +52,9 @@ export default class Configurator extends React.Component {
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
+
+    // Name discrepancy is purposeful and legacy
+    this.makeSelection = this.configureSelection.bind(this);
 
     // Setup components to use for different views
     this.components = {
@@ -173,18 +175,14 @@ export default class Configurator extends React.Component {
     return {
       body: {type: 'model', asset: "c95aa5d830344811b8e726740199dda0", id: "6d65d532ad564be39484f29eb8526521", name: "Eight String", price: "2399"},
       ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", color: "#000", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
-      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", color: "#000", id: "b15f39a18970471e9b632e2b0085db13", name: "Maple", price: "0"},
+      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", color: "#000", id: "b15f39a18970471e9b632e2b0085db13", name: "Eastern Hard Rock Maple", price: "0"},
       fingerboard: {asset: "4405833b559f462381727a1b538182ed", color: "#000", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
       sidedots: {color: "#000", id: "4261991f913648ab9cdee1a50e55a0a3", name: "Standard", price: "0"},
       hardware: {color: "#000", id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
-      battery: {color: "#000", id: "6370194e256a4ae28264bcd0063abf6a", name: "Default 9V Battery", price: "0"},
+      battery: {color: "#000", id: "6370194e256a4ae28264bcd0063abf6a", name: "Default 9V battery", price: "0"},
       pickups: {color: "#000", id: "aef2b3e099d64a23a813d01be244c855", name: "White", price: "0"},
       finish: {color: "#fcfcfc", id: "af47f49cfc0e4a6e9f7954d3e1d54948", name: "Natural Transparent", price: "0"},
     };
-  }
-
-  async makeSelection(selection, option) {
-    this.configureSelection(selection, option);
   }
 
   async configureSelection(selection, option) {
@@ -295,7 +293,7 @@ export default class Configurator extends React.Component {
         {this.getItems() &&
           <Component
             renderer={this.renderer}
-            getItems={this.getItems}
+            items={this.state.items}
             makeSelection={this.makeSelection}
             price={this.state.price}
             loading={this.state.loading}
@@ -307,6 +305,7 @@ export default class Configurator extends React.Component {
             updatePercent={this.updatePercent}
             uuids={this.state.uuids}
             setUuids={this.setUuids}
+            selections={this.state.selections}
           />
         }
       </div>

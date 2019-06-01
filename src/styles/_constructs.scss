@@ -52,17 +52,20 @@ a {
 
 /* Notifications */
 .toast-container {
-  width: 100%;
+  width: calc(100% - 350px);
   bottom: 0;
   left: 0;
   margin-left: 0;
   text-align: center;
+  opacity: 0.7;
 }
 
 .dark-toast {
   background-color: $anchor-color;
-  color: $accent-color;
-  font-size: 2em;
+  color: $primary-color;
+  font-size: 1.8em;
+  margin: 0;
+  padding: 20px;
 
   &.Toastify__toast--success {
     color: $accent-color;
@@ -79,4 +82,110 @@ a {
   .Toastify__progress-bar--error {
     background-color: $error-color;
   }
+
+  .Toastify__close-button {
+    font-size: 1em;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .dark-toast {
+    font-size: 1.2em;
+  }
+}
+
+.app-sidebar {
+  will-change: transform;
+
+  i {
+    position: absolute;
+    color: $space-color;
+    top: 60px;
+    left: 10px;
+    z-index: 1;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      color: $accent-color;
+      transform: rotate(90deg);
+    }
+  }
+}
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+  position: fixed;
+  width: 36px;
+  height: 30px;
+  right: 10px;
+  top: 10px;
+}
+
+/* Color/shape of burger icon bars */
+.bm-burger-bars {
+  background: $anchor-color;
+  transition: all 0.3s linear;
+}
+
+/* Position and sizing of clickable cross button */
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+/* Color/shape of close button cross */
+.bm-cross {
+  background: $primary-color;
+}
+
+/* General sidebar styles */
+.bm-menu {
+  background: $anchor-color;
+  padding: 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+  fill: $anchor-color;
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+  color: $primary-color;
+  padding: 0.8em;
+  margin-top: 10px;
+  height: 70%;
+
+  .menu-logo {
+    border: none;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
+/* Individual item */
+.bm-item {
+  padding: 5px;
+  text-align: center;
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+
+  &:hover {
+    color: $link-color;
+  }
+}
+
+/* Styling of overlay */
+.bm-overlay {
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.3);
 }

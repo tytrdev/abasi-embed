@@ -1,4 +1,3 @@
-import OBJLoader from 'three-obj-loader';
 import FBXLoader from 'three-fbxloader-offical';
 import OrbitControls from 'three-orbitcontrols';
 import _ from 'lodash';
@@ -7,8 +6,6 @@ import Groups from '../constants/groups';
 import Materials from './helpers/Materials';
 
 const Three = require('three');
-
-OBJLoader(Three);
 
 function colorToSigned24Bit(s) {
   return (parseInt(s.substr(1), 16) << 8) / 256;
@@ -332,9 +329,21 @@ export default class Renderer {
 
     await new Promise((resolve, reject) => {
       try {
-        this.modelLoader.load(model.location, async obj => {
+        this.modelLoader.load(model.location, obj => {
           obj.rotation.y = Math.PI;
           this.models.current = obj;
+
+          if (this.container.clientWidth < 1250) {
+            const newScale = this.container.clientWidth / 1250.0;
+            this.models.current.scale.x = newScale;
+            this.models.current.scale.y = newScale;
+            this.models.current.scale.z = newScale;
+          } else {
+            this.models.current.scale.x = 1.0;
+            this.models.current.scale.y = 1.0;
+            this.models.current.scale.z = 1.0;
+          }
+          
           this.scene.add(obj);
           this.prepareModel();
           resolve('Success');
@@ -444,15 +453,14 @@ export default class Renderer {
         this.materials.standardMaterial = Materials.withColor(this.reflectionCube, color);
         this.materials.standardMaterial.map = map;
 
-        const headStockMap = this.materials.headStockMaterial.map;
-        this.materials.headStockMaterial = Materials.withoutColor(this.reflectionCube);
-        this.materials.headStockMaterial.map = headStockMap;
+        this.materials.headStockMaterial = this.materials.neckMaterial;
         break;
       case 'premium':
         this.finishMode = PREMIUM;
 
         this.materials.outerPremiumMaterial = Materials.metalWithColor(this.reflectionCube, color);
         this.materials.innerPremiumMaterial = Materials.withColor(this.reflectionCube, color);
+        this.materials.headStockMaterial = this.materials.neckMaterial;
         break;
       case 'artseries':
         this.finishMode = ARTSERIES;

@@ -1,5 +1,4 @@
-@media only screen and (min-width: 1001px) {
-
+@media only screen and (max-width: 1000px) {
 /**** Structural CSS ****/
 .space-right {
   margin-right: 10px;
@@ -17,54 +16,24 @@
   height: 100%;
 }
 
-/* Tooltip text */
-.tooltip {
-  position:relative;
-}
-
-.tooltiptext {
-  position: absolute;
-  right: 20px;
-  bottom: 0;
-  font-size: 2em;
-  visibility: hidden;
-  background-color: $anchor-color;
-  color: $primary-color;
-  padding: 20px;
-  opacity: 0.7;
-
-  /* Position the tooltip text - see examples below! */
-  z-index: 1;
-}
-
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
-
 /**** Views ****/
 .home-viewport {
   position: relative;
-  width: calc(100% - 350px);
+  width: 100%;
 }
 
 .home-menu {
-  height: 100%;
-  width: 350px;
-  background-color: $anchor-color;
-  color: $primary-color;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: none;
 }
 
 /**** Components ****/
 
 /* Viewport */
 .review-btn {
+  margin: 0;
   position: absolute;
   z-index: 10;
-  right: 185px;
+  right: 120px;
   bottom: 10px;
   border: none;
   width: 150px;
@@ -87,17 +56,23 @@
 }
 
 .price-btn {
+  margin: 0;
   position: absolute;
   z-index: 10;
   right: 15px;
   bottom: 10px;
-  width: 150px;
-  color: $anchor-color;
+  width: 80px;
+  color: $primary-color;
   font-weight: 600;
-  height: 50px;
+  height: 50px !important;
   line-height: 50px;
   text-align: center;
-  background-color: #696969;
+  font-size: 0.3em;
+  padding: 0;
+
+  div {
+    height: 50px !important;
+  }
 }
 
 .viewport-view {
@@ -125,87 +100,10 @@
   cursor: pointer;
 }
 
-/* Menu */
-.menu {
-  /* flex-basis: 0; */
-  display: flex;
-  flex-grow: 1;
-  align-content: flex-start;
-  justify-content: flex-start;
-}
-
-/* .menu.columns {
-  flex-flow: column wrap;
-  overflow-y: scroll;
-} */
-
-/* Tile */
-.tile {
-  position: relative;
-  display: flex;
-  flex: 1;
-  min-height: 50px;
-  max-height: 50px;
-  min-width: 150px;
-  /* background-color:white; */
-  color: black;
-
-  box-sizing: border-box;
-  /* border-top: 1px solid #464646; */
-  /* border-bottom: 1px solid #464646; */
-
-  transition: all 0.5s linear;
-  cursor: pointer;
-}
-
-.tile:hover {
-  /* color: rgb(124, 18, 196); */
-  background-color: rgb(70, 70, 70);
-  color: white;
-}
-
-.tiles-container {
-  display: flex;
-  flex-direction: column;
-
-  .tile {
-    text-align: right;
-    line-height: 50px;
-
-    .tile-label {
-      font-size: 1.3em;
-      flex-grow: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      &:last-child {
-        margin-right: 10px; 
-      }
-    }
-
-    .tile-price {
-      min-width: 100px;
-      font-size: 1.3em;
-      flex-grow: 1;
-      margin-right: 10px;
-    }
-  }
-}
-
-
 /* Confirmation */
 .checkout-button {
   height: 50px;
   width: 100px;
-}
-
-.logo-container {
-  height: 50px;
-}
-
-.abasi-logo {
-  margin-left: 20px;
-  width: 250px;
 }
 
 .configurator-spinner {
@@ -284,10 +182,8 @@
 
 .configurator-menu {
   overflow-y: scroll;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
+
+  height: 70%;
 }
 
 .configurator-finish-menu {
@@ -354,8 +250,28 @@ html {
   }
 }
 
-.home-menu-mobile {
-  display: none;
+/* Tooltip text */
+.tooltip {
+  position:relative;
 }
 
-} // End media query
+.tooltiptext {
+  position: absolute;
+  right: 20px;
+  bottom: 0;
+  font-size: 2em;
+  visibility: hidden;
+  background-color: $anchor-color;
+  color: $primary-color;
+  padding: 20px;
+  opacity: 0.7;
+
+  /* Position the tooltip text - see examples below! */
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: none;
+}
+}

@@ -1,9 +1,5 @@
-@media only screen and (min-width: 1001px) {
-/**
-* ----------------------------------------------
-* Demo styles
-* ----------------------------------------------
-**/
+@media only screen and (max-width: 1000px) {
+
 .accordion {
   // border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -109,4 +105,4 @@
     }
   }
 }
-} // End media query
+}

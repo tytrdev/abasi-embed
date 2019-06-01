@@ -1,5 +1,5 @@
 export default {
-  six: 'be4482b1c386452b9d0361a2c49628b4',
-  seven: 'be4482b1c386452b9d0361a2c49628b4',
-  eight: 'be4482b1c386452b9d0361a2c49628b4',
+  six: 'a46a9d3ff1da4620aed77b8c1ecf987d',
+  seven: 'a46a9d3ff1da4620aed77b8c1ecf987d',
+  eight: 'a46a9d3ff1da4620aed77b8c1ecf987d',
 };
