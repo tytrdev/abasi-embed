@@ -1,6 +1,5 @@
 import React from 'react';
-import { slide as Slide } from 'react-burger-menu';
-import { Link } from 'react-router-dom';
+import { push as Slide } from 'react-burger-menu';
 
 import Menu from './Menu';
 import Price from './Price';
@@ -39,9 +38,11 @@ class Sidebar extends React.Component {
         isOpen={this.state.open}
         pageWrapId={ 'app-body' }
         outerContainerId={ 'app-container' }
+        
       >
         <Menu
           columns
+          mobile
           items={this.props.items}
           renderer={this.props.renderer}
           callback={this.props.callback}

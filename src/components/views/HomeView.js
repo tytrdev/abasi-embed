@@ -60,8 +60,8 @@ export default class HomeView extends React.Component {
 
         <div className="home-menu-mobile">
           <MobileMenu
-            items={this.props.items}
             columns
+            items={this.props.items}
             renderer={this.props.renderer}
             callback={this.props.makeSelection}
             uuids={this.props.uuids}

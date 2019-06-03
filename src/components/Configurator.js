@@ -48,7 +48,7 @@ export default class Configurator extends React.Component {
     this.handlePrice = this.handlePrice.bind(this);
     this.handleOrder = this.handleOrder.bind(this);
     this.handleMain = this.handleMain.bind(this);
-    this.submitOrder = this.submitOrder.bind(this);
+    this.handlePayment = this.handlePayment.bind(this);
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
@@ -106,12 +106,10 @@ export default class Configurator extends React.Component {
 
     this.rendererContainer.appendChild(this.renderer.getRendererElement());
 
-    
     // Grab configuration items for the user menu
     const items = await ConfigurationService.getConfig();
     const models = await AssetService.getModelMetadata();
-    const textures = await AssetService.getTextureMetadata();
-    
+    const textures = await AssetService.getTextureMetadata();    
 
     // TODO: Fix this
     // Begin pricing module
@@ -189,15 +187,12 @@ export default class Configurator extends React.Component {
     const { selections } = this.state;
     const { key, type } = selection;
 
-    // this.setState({
-    //   loading: true,
-    // });
-
     try {
       await this.renderer.updateSelections(type, key, option);
     } catch (ex) {
       console.log(ex);
       toast.error('Hmm...having trouble loading that asset');
+      toast.error(ex.message);
     }
 
     selections[key] = option;
@@ -205,11 +200,9 @@ export default class Configurator extends React.Component {
 
     this.setState({
       selections,
-      // loading: false,
       price,
     });
   }
-
 
   evaluatePrice(selections) {
     console.log(selections);
@@ -250,9 +243,9 @@ export default class Configurator extends React.Component {
     this.renderer.handleEvent(event, this.state.data);
   }
 
-  async submitOrder(purchaserInfo) {
+  handlePayment(purchaserInfo) {
     console.log('Submitting order...');
-    
+
     const data = {
       status: 'Processing',
       specs: this.state.selections,
@@ -260,9 +253,11 @@ export default class Configurator extends React.Component {
       total: this.state.price,
     };
 
-    await OrderService.create(data);
+    this.setState({
+      order: data,
+    });
 
-    toast.success('Successfully submitted order!');
+    this.changeMode(Modes.PAYMENT);
   }
 
   render() {
@@ -299,8 +294,8 @@ export default class Configurator extends React.Component {
             loading={this.state.loading}
             handlePrice={this.handlePrice}
             handleMain={this.handleMain}
+            handlePayment={this.handlePayment}
             data={this.state.selections}
-            submitOrder={this.submitOrder}
             handleOrder={this.handleOrder}
             updatePercent={this.updatePercent}
             uuids={this.state.uuids}

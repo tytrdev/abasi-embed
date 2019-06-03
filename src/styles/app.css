@@ -286,6 +286,7 @@ a {
   .configurator-spinner {
     position: absolute;
     text-align: center;
+    font-weight: 600;
     top: calc(50% - 22px);
     left: calc(50% - 120px);
     z-index: 5; }

@@ -15,39 +15,6 @@ class AssetService extends Service {
     this.mapMetadata = [];
   }
 
-  async createModel(filename, size, location) {
-    const data = {
-      id: uuid.v4().replace(/-/g, ''),
-      filename,
-      size,
-      location,
-    };
-
-    await DB.collection('models').doc(data.id).set(data);
-  }
-
-  async createTexture(filename, size, location) {
-    const data = {
-      id: uuid.v4().replace(/-/g, ''),
-      filename,
-      location,
-      size,
-    };
-
-    await DB.collection('textures').doc(data.id).set(data);
-  }
-
-  async createMap(filename, size, location) {
-    const data = {
-      id: uuid.v4().replace(/-/g, ''),
-      filename,
-      location,
-      size,
-    };
-
-    await DB.collection('maps').doc(data.id).set(data);
-  }
-
   async getModelMetadata() {
     const { modelMetadata } = this;
 
@@ -80,35 +47,6 @@ class AssetService extends Service {
     });
 
     return this.textureMetadata;
-  }
-
-  async getMapMetadata() {
-    const { mapMetadata } = this;
-
-    if (mapMetadata && mapMetadata.length) {
-      return mapMetadata;
-    }
-
-    const snapshot = await DB.collection('maps').get();
-    snapshot.forEach((doc) => {
-      const map = doc.data();
-      map.id = doc.id;
-      this.mapMetadata.push(map);
-    });
-
-    return this.mapMetadata;
-  }
-
-  async removeTexture(texture) {
-    await DB.collection('textures').doc(texture).delete();
-  }
-
-  async removeModel(model) {
-    await DB.collection('models').doc(model).delete();    
-  }
-
-  async removeMap(map) {
-    await DB.collection('maps').doc(map).delete();
   }
 }
 

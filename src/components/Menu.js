@@ -47,7 +47,7 @@ class Menu extends React.Component {
 
     return (
       <Accordion preExpanded={this.props.uuids} allowZeroExpanded className="configurator-finish-menu">
-        <AccordionItem key={`menu-item-${i}`}>
+        <AccordionItem key="standard-finishes">
           <AccordionItemHeading>
             <AccordionItemButton>
               <span className="item-title">
@@ -62,7 +62,7 @@ class Menu extends React.Component {
           </AccordionItemPanel>
         </AccordionItem>
 
-        <AccordionItem key={`menu-item-${i}`}>
+        <AccordionItem key="premium-finishes">
           <AccordionItemHeading>
             <AccordionItemButton>
               <span className="item-title">
@@ -77,7 +77,7 @@ class Menu extends React.Component {
           </AccordionItemPanel>
         </AccordionItem>
 
-        <AccordionItem key={`menu-item-${i}`}>
+        <AccordionItem key="artseries-finishes">
           <AccordionItemHeading>
             <AccordionItemButton>
               <span className="item-title">
@@ -101,8 +101,10 @@ class Menu extends React.Component {
 
     const optionClass = `item-option ${ isActive ? 'active' : '' }`;
 
+    // const key = this.props.mobile ? `mobile-menu-item-option-${item.id}-${i}` : `menu-item-option-${item.id}-${i}`;
+
     return (
-      <span key={`menu-item-option-${i}`} className={optionClass} onClick={() => this.props.callback(item, option)}>
+      <span className={optionClass} onClick={() => this.props.callback(item, option)}>
         <span className="item-option-name">
           { option.name }
         </span>
@@ -130,7 +132,7 @@ class Menu extends React.Component {
     }
 
     return (
-      <AccordionItem key={`menu-item-${i}`} onClick={() => this.props.setUuids(item.id)} uuid={item.id}>
+      <AccordionItem onClick={() => this.props.setUuids(item.id)} uuid={item.id}>
         <AccordionItemHeading onClick={() => this.displayDescription(item)}>
           <AccordionItemButton>
             <span className="item-title">

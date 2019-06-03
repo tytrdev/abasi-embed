@@ -22,7 +22,7 @@ const App = () => (
         position="bottom-center"
       />
 
-      <div className="flex app-body">
+      <div id="app-body" className="flex app-body">
         <Switch>
           <Route exact path="/:type" render={props => <Configurator {...props} />} />
           <Route component={Welcome} />

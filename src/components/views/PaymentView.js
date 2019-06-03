@@ -10,52 +10,20 @@ export default class PaymentView extends React.Component {
     super(props);
 
     this.handleChange = this.handleChange.bind(this);
-    this.changeMode = this.changeMode.bind(this);
   }
 
-  handleChange(data, key) {
-    this.props.setData(data, key);
-  }
+  handleChange(event) {
+    const { name, value } = event.target;
 
-  changeMode(mode) {
-    this.props.changeMode(mode);
+    this.setState({
+      [name]: value,
+    });
   }
 
   render() {
     return (
-      <div className="container">
-        <div className="container option-menu">
-          <div className="back-button">
-            <button className="btn" onClick={this.props.goBack}>
-              Back
-            </button>
-          </div>
-
-          <Menu
-            items={this.props.getItems()}
-            setData={this.handleChange}
-            changeMode={this.changeMode}
-            columns
-          />
-        </div>
-
-        <div className="container columns">
-          <div className="container option-viewport">
-            <ViewPort
-              data={this.props.data}
-              setData={this.handleChange}
-              changeMode={this.changeMode}
-            />
-          </div>
-
-          <div className="container option-info">
-            <Info
-              data={this.props.data}
-              setData={this.handleChange}
-              changeMode={this.changeMode}
-            />
-          </div>
-        </div>
+      <div className="payment-view">
+        Payment stuff goes here
       </div>
     );
   }

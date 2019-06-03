@@ -82,13 +82,14 @@ export default class Renderer {
   async createScene() {
     this.scene = new Three.Scene();
     this.camera = new Three.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 200);
+    this.camera.position.z = -100;
 
     // Setup controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1;
     this.controls.maxDistance = 80;
-    this.controls.minDistance = 50;
+    this.controls.minDistance = 20;
     this.controls.panSpeed = 0;
     this.controls.enableZoom = true;
     this.controls.enablePan = false;
@@ -101,35 +102,20 @@ export default class Renderer {
 
     const lightModifier = 200;
     const positions = [
-      // [1, 1, 1, 0.1],
+      // [1, 1, 1, LIGHT_INTENSITY],
       [1, 1, -1, LIGHT_INTENSITY],
-      // [1, -1, 1, 0.1],
+      // [1, -1, 1, LIGHT_INTENSITY],
       [1, -1, -1, LIGHT_INTENSITY],
-      // [-1, 1, 1, 0.1],
-      [-1, 1, -1, LIGHT_INTENSITY],
-      // [-1, -1, 1, 0.1],
+      // [-1, 1, 1, LIGHT_INTENSITY],
+      [-0.5, 1.5, -1, LIGHT_INTENSITY],
+      // [-1, -1, 1, LIGHT_INTENSITY],
       [-1, -1, -1, LIGHT_INTENSITY],
     ];
     
     _.each(positions, data => {
-      const light = new Three.DirectionalLight(0xffffff, data[3]);
+      const light = new Three.PointLight(0xffffff, data[3]);
       light.position.set(data[0] * lightModifier, data[1] * lightModifier, data[2] * lightModifier);
       light.lookAt(0, 0, 0);
-
-      light.castShadow = true;
-      light.shadowCameraVisible = true;
-      light.shadowCameraTop = 2000;
-      light.shadowCameraBottom = -2000;
-      light.shadowCameraRight = 2000;
-      light.shadowCameraLeft = -2000;
-      light.shadowCameraFov = 45;
-      light.shadowMapBias = 0.0039;
-      light.shadowMapDarkness = 0.05;
-      light.shadowDarkness = 0.25;
-      light.shadowBias = 0.001;
-      light.shadowCameraNear = 0;
-      light.shadowCameraFar = 2500;
-
       this.scene.add(light);
     });
 
@@ -293,6 +279,7 @@ export default class Renderer {
             }
 
             break;
+          case Groups.Battery_Button_Nub:
           default:
             child.material = this.materials.blackMetalMaterial;
             break;

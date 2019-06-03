@@ -25,7 +25,7 @@ export default class CustomerView extends React.Component {
   submitOrder(event) {
     event.preventDefault();
 
-    this.props.submitOrder(this.state);
+    this.props.handlePayment(this.state);
   }
 
   handleChange(event) {
@@ -175,7 +175,7 @@ export default class CustomerView extends React.Component {
               </label>
               
               <button type="submit" className="submit-order-button">
-                Submit Order
+                Continue To Payment
               </button>
             </form>
           </div>
@@ -189,5 +189,5 @@ CustomerView.propTypes = {
   getItems: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
   handleMain: PropTypes.func.isRequired,
-  submitOrder: PropTypes.func.isRequired,
+  handlePayment: PropTypes.func.isRequired,
 };
