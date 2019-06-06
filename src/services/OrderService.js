@@ -19,9 +19,8 @@ class OrderService extends Service {
       this.orders.push(order);
     });
   }
-  
+
   async create(data) {
-    console.log(data);
     await DB.collection('orders').doc().set(data);
   }
 }

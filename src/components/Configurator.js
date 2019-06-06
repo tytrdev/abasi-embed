@@ -2,10 +2,10 @@ import React from 'react';
 import _ from 'lodash';
 import { Line } from 'rc-progress';
 import { toast } from 'react-toastify';
+import Axios from 'axios';
 
 // Constants
 import Modes from '../constants/modes';
-import SelectionTypes from '../constants/selection-types';
 import ModelMap from '../constants/model-map';
 
 // WebGL Renderer
@@ -21,7 +21,6 @@ import ConfigurationService from '../services/ConfigurationService';
 import AssetService from '../services/AssetService';
 import { ClipLoader } from 'react-spinners';
 import textureMap from '../constants/texture-map';
-import OrderService from '../services/OrderService';
 
 export default class Configurator extends React.Component {
   constructor(props) {
@@ -49,6 +48,7 @@ export default class Configurator extends React.Component {
     this.handleOrder = this.handleOrder.bind(this);
     this.handleMain = this.handleMain.bind(this);
     this.handlePayment = this.handlePayment.bind(this);
+    this.submitOrder = this.submitOrder.bind(this);
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
@@ -115,7 +115,6 @@ export default class Configurator extends React.Component {
     // Begin pricing module
     const selections = Configurator.getInitialData();
     const price = this.evaluatePrice(selections);
-    console.log(price);
 
     this.setState({
       items: this.transformItems(items),
@@ -192,7 +191,6 @@ export default class Configurator extends React.Component {
     } catch (ex) {
       console.log(ex);
       toast.error('Hmm...having trouble loading that asset');
-      toast.error(ex.message);
     }
 
     selections[key] = option;
@@ -205,8 +203,6 @@ export default class Configurator extends React.Component {
   }
 
   evaluatePrice(selections) {
-    console.log(selections);
-
     return Number.parseInt(_.map(selections, s => s.price).reduce((p, c) => {
       p = Number.parseInt(p);
       c = Number.parseInt(c);
@@ -244,10 +240,7 @@ export default class Configurator extends React.Component {
   }
 
   handlePayment(purchaserInfo) {
-    console.log('Submitting order...');
-
     const data = {
-      status: 'Processing',
       specs: this.state.selections,
       purchaserInfo,
       total: this.state.price,
@@ -258,6 +251,26 @@ export default class Configurator extends React.Component {
     });
 
     this.changeMode(Modes.PAYMENT);
+  }
+
+  async submitOrder(token) {
+    const { order } = this.state;
+
+    const response = await Axios('https://us-central1-abasi-configurator.cloudfunctions.net/submitOrder', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      data: {
+        order,
+        token: token.id,
+      }
+    });
+
+    if (response.ok) {
+      toast.success('Successfully submitted order. You receipt has been emailed to you');
+    } else {
+      toast.error('Unable to process order at this time');
+      console.log(response);
+    }
   }
 
   render() {
@@ -301,6 +314,7 @@ export default class Configurator extends React.Component {
             uuids={this.state.uuids}
             setUuids={this.setUuids}
             selections={this.state.selections}
+            submit={this.submitOrder}
           />
         }
       </div>

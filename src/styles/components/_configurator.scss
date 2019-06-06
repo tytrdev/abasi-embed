@@ -355,6 +355,89 @@ html {
   }
 }
 
+.checkout {
+  display: flex;
+  flex-direction: column;
+  font-size: 2em;
+  align-items: center;
+  height: 100%;
+
+  .price {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.3em;
+  }
+
+  // .checkout-form {
+  //   display: flex;
+
+  //   width: 100%;
+  //   height: 100%;
+  // }
+
+  .checkout-form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+    justify-content: center;
+  }
+
+  /**
+  * The CSS shown here will not be introduced in the Quickstart guide, but shows
+  * how you can use CSS to style your Element's container.
+  */
+  .StripeElement {
+    box-sizing: border-box;
+
+    height: 40px;
+
+    padding: 10px 12px;
+    border: 1px solid $anchor-color;
+    color: $primary-color;
+
+    box-shadow: 0 1px 3px 0 #e6ebf1;
+    -webkit-transition: box-shadow 150ms ease;
+    transition: box-shadow 150ms ease;
+
+    * {
+      color: $primary-color !important;
+    }
+  }
+
+  .StripeElement--focus {
+    box-shadow: 0 1px 3px 0 #cfd7df;
+    color: $primary-color;
+  }
+
+  .StripeElement--invalid {
+    border-color: #fa755a;
+  }
+
+  .StripeElement--webkit-autofill {
+    background-color: #fefde5 !important;
+  }
+
+  .CardField {
+    color: $primary-color !important;
+
+    .CardField-child  {
+      color: $primary-color !important;
+    font-size: 2em !important;
+
+    }
+  }
+
+  .checkout-button {
+    align-self: center;
+    margin-top: 10px;
+    width: 100%;
+    background-color: $success-color;
+    border: none;
+  }
+}
+
 .home-menu-mobile {
   display: none;
 }

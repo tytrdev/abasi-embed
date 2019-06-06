@@ -119,8 +119,6 @@ class Menu extends React.Component {
   }
 
   getItem(item, i) {
-    console.log(item);
-
     let options;
 
     if (item.key === 'finish') {

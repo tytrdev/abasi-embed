@@ -1,6 +1,5 @@
 import Service from './Service';
-import uuid from 'uuid';
-import { DB, Storage } from '../firebase';
+import { DB } from '../firebase';
 
 class AssetService extends Service {
   constructor() {

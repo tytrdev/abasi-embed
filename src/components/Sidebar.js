@@ -1,5 +1,5 @@
 import React from 'react';
-import { push as Slide } from 'react-burger-menu';
+import { slide as Slide } from 'react-burger-menu';
 
 import Menu from './Menu';
 import Price from './Price';

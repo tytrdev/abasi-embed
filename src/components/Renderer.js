@@ -186,7 +186,6 @@ export default class Renderer {
 
     model.traverse( child => {
       if ( child instanceof Three.Mesh ) {
-        console.log(child.name);
         switch (child.name) {
           case Groups.Tuners:
           case Groups.Bridge:
@@ -291,19 +290,15 @@ export default class Renderer {
   async updateSelections(type, key, option) {
     switch(type) {
       case 'material':
-        console.log('material at:', key);
         await this.selectMaterial(option, key);
         break;
       case 'texture':
-        console.log('texture at:', key);
         await this.selectTexture(option, key);
         break;
       case 'finish':
-        console.log('finish at:', key);
         await this.selectFinish(option, key);
         break;
       default:
-        console.log('This is something else entirely');
         break;
     }
 
@@ -336,11 +331,8 @@ export default class Renderer {
           resolve('Success');
         }, (progress) => {
           const percent = (progress.loaded / progress.total) * 100;
-          console.log(progress, percent);
           this.updatePercent(percent, true, false);
         });
-
-        // (progress) => this.updatePercent((progress.loaded / progress.total * 100)), true, false
       } catch (ex) {
         reject(ex);
       }
@@ -348,9 +340,6 @@ export default class Renderer {
   }
 
   async selectMaterial(selection, key) {
-    // TODO: Handle updating material
-    console.log(selection);
-
     const color = colorToSigned24Bit(selection.color);
 
     switch(key) {
@@ -364,13 +353,11 @@ export default class Renderer {
         this.materials.pickupMaterial = Materials.withColor(this.reflectionCube, color);
         break;
       default:
-        console.log('Cannot determine what material to modify...');
         break;
     }
   }
 
   async selectTexture(selection, key) {
-    console.log(selection);
     const asset = _.find(this.assets.textures, t => t.id === selection.asset);
     let texture;
 
@@ -380,10 +367,7 @@ export default class Renderer {
     } else {
       texture = this.textures[asset.filename];
     }
-    
-    console.log(key);
 
-    // TODO: Handle updating material with texture
     switch(key) {
       case 'body-wood':
         this.materials.standardMaterial = Materials.withoutColor(this.reflectionCube);
@@ -413,16 +397,12 @@ export default class Renderer {
         }
         break;
       default:
-        console.log('Cannot determine what texture to modify...');
         break;
     }
   }
 
   async selectFinish(selection, key) {
-    console.log('Configuring new Finish');
-
     const { type } = selection;
-
     const color = colorToSigned24Bit(selection.color);
 
     // Default battery cover

@@ -1,38 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Elements} from 'react-stripe-elements';
 
-import ViewPort from '../Viewport';
-import Menu from '../Menu';
-import Info from '../Info';
+import CheckoutForm from './CheckoutForm';
 
-export default class PaymentView extends React.Component {
-  constructor(props) {
-    super(props);
+const PaymentView = ({ price, submit }) => (
+  <div className="container checkout">
+    <div className="price">
+      Order Total - ${price}
+    </div>
 
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleChange(event) {
-    const { name, value } = event.target;
-
-    this.setState({
-      [name]: value,
-    });
-  }
-
-  render() {
-    return (
-      <div className="payment-view">
-        Payment stuff goes here
-      </div>
-    );
-  }
-}
+    <Elements>
+      <CheckoutForm
+        submit={submit}
+      />
+    </Elements>
+  </div>
+);
 
 PaymentView.propTypes = {
-  setData: PropTypes.func.isRequired,
-  getItems: PropTypes.func.isRequired,
-  changeMode: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
-  goBack: PropTypes.func.isRequired,
+  submit: PropTypes.func.isRequired,
 };
+
+export default PaymentView;
