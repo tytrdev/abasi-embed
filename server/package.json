@@ -4,7 +4,8 @@
   "description": "Abasi Stripe Integration Server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -13,7 +14,12 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^8.0.0",
+    "lodash": "^4.17.11",
     "nodemailer": "^6.2.1",
-    "stripe": "^7.1.0"
+    "stripe": "^7.1.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }

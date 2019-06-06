@@ -52,7 +52,8 @@ export default class CustomerView extends React.Component {
 
           <div className="container customer-info">
             <div className="price">
-              Order Total - ${this.props.price}
+              Order Total - ${this.props.price} <br />
+              Deposit Total - ${this.props.depositPrice} (35%)
             </div>
 
             <h1>Customer Information</h1>

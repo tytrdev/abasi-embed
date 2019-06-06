@@ -21,7 +21,7 @@ export default class ConfirmationView extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container confirmation-view">
         <div className="container columns">
           <div className="back-button">
             <button className="back-to-order" onClick={this.props.handleMain}>
@@ -29,8 +29,18 @@ export default class ConfirmationView extends React.Component {
             </button>
           </div>
 
+          <div className="view-price">
+            Order Total - ${this.props.price} <br />
+            Deposit Total - ${this.props.depositPrice} (35%)
+          </div>
+
           <div className="container option-info">
-            <Info data={this.props.data} price={this.props.price} submitOrder={this.props.handleOrder} />
+            <Info
+              data={this.props.data}
+              price={this.props.price}
+              depositPrice={this.props.depositPrice}
+              submitOrder={this.props.handleOrder} 
+            />
           </div>
         </div>
       </div>

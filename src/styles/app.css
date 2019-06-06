@@ -367,7 +367,7 @@ a {
       position: absolute;
       top: 10px;
       left: 10px;
-      font-size: 1.3em; }
+      font-size: 1em; }
     .customer-info form {
       display: flex;
       flex-direction: column; }
@@ -380,10 +380,14 @@ a {
         .customer-info form label input, .customer-info form label textarea {
           margin-bottom: 10px;
           width: 100%; }
+  .confirmation-view .view-price {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 2em; }
   .checkout {
     display: flex;
     flex-direction: column;
-    font-size: 2em;
     align-items: center;
     height: 100%;
     /**
@@ -424,12 +428,40 @@ a {
       .checkout .CardField .CardField-child {
         color: #ffffff !important;
         font-size: 2em !important; }
+    .checkout .price {
+      font-size: 2em; }
+    .checkout .header {
+      font-size: 2em;
+      text-align: center;
+      margin: 0; }
+    .checkout .info {
+      font-size: 1.3em;
+      text-align: center;
+      font-weight: 600; }
     .checkout .checkout-button {
       align-self: center;
       margin-top: 10px;
       width: 100%;
       background-color: #22b85b;
-      border: none; }
+      border: none;
+      font-size: 2em;
+      cursor: pointer;
+      transition: 0.3s all linear; }
+      .checkout .checkout-button:hover {
+        background-color: #000000;
+        color: #ffffff; }
+  .success-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em; }
+    .success-view .support-link {
+      color: #0d8ddd;
+      margin-left: 5px;
+      margin-right: 5px; }
   .home-menu-mobile {
     display: none; } }
 

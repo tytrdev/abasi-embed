@@ -96,7 +96,7 @@ class Menu extends React.Component {
   }
 
   getOption(item, option, i) {
-    const isActive = _.find(this.props.selections, s => s.name === option.name);
+    const isActive = _.find(this.props.selections, s => s.id === option.id);
     const showPrice = Number.parseInt(option.price) > 0;
 
     const optionClass = `item-option ${ isActive ? 'active' : '' }`;

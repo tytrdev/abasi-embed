@@ -18,7 +18,8 @@ class CheckoutForm extends React.Component {
   render() {
     return (
       <div className="checkout-form">
-        <p>Would you like to complete the purchase?</p>
+        <h1 className="header">Would you like to place this order?</h1>
+        <p className="info">You will be paying a 35% deposit of ${this.props.depositPrice}</p>
 
         <CardElement />
 
@@ -32,6 +33,7 @@ class CheckoutForm extends React.Component {
 
 CheckoutForm.propTypes = {
   submit: PropTypes.func.isRequired,
+  depositPrice: PropTypes.number.isRequired,
 };
 
 export default injectStripe(CheckoutForm);

@@ -4,4 +4,5 @@ export default {
   PAYMENT: 'Payment',
   CONFIRMATION: 'Confirmation',
   CUSTOMER: 'Customer',
+  SUCCESS: 'Success',
 };

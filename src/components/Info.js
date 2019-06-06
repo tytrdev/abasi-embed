@@ -55,13 +55,9 @@ export default class Info extends React.Component {
         { this.getSelectionContent('fingerboard', 'Fingerboard Material', 3) }
         { this.getSelectionContent('sidedots', 'Side Dot Material', 4) }
         { this.getSelectionContent('hardware', 'Hardware Style', 5) }
-        { this.getSelectionContent('pickups', 'Pickup Covers', 6) }
+        { this.getSelectionContent('pickup-covers', 'Pickup Covers', 6) }
         { this.getSelectionContent('finish', 'Finish', 7) }
         { this.getSelectionContent('battery', 'Battery Style', 8) }
-
-        <div className="order-total">
-          Total: ${this.props.price} USD
-        </div>
 
         <button type="button" onClick={this.props.submitOrder} className="submit-order-button">
           Continue to Order Submission

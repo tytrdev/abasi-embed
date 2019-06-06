@@ -17,10 +17,14 @@ import OptionView from './views/OptionView';
 import CustomerView from './views/CustomerView';
 import PaymentView from './views/PaymentView';
 import ConfirmationView from './views/ConfirmationView';
+import SuccessView from './views/SuccessView';
+
 import ConfigurationService from '../services/ConfigurationService';
 import AssetService from '../services/AssetService';
 import { ClipLoader } from 'react-spinners';
 import textureMap from '../constants/texture-map';
+
+const DEPOSIT_RATE = 0.35;
 
 export default class Configurator extends React.Component {
   constructor(props) {
@@ -33,6 +37,7 @@ export default class Configurator extends React.Component {
       percent: 0,
       mode: Modes.HOME,
       price: 0,
+      depositPrice: 0,
       items: [],
       selections: {},
       uuids: [],
@@ -63,6 +68,7 @@ export default class Configurator extends React.Component {
       [Modes.PAYMENT]: PaymentView,
       [Modes.CONFIRMATION]: ConfirmationView,
       [Modes.CUSTOMER]: CustomerView,
+      [Modes.SUCCESS]: SuccessView,
     };
 
     this.renderer = new Renderer(this.updatePercent);
@@ -115,13 +121,15 @@ export default class Configurator extends React.Component {
     // Begin pricing module
     const selections = Configurator.getInitialData();
     const price = this.evaluatePrice(selections);
+    const depositPrice = price * DEPOSIT_RATE;
 
     this.setState({
       items: this.transformItems(items),
       models,
       textures,
       selections,
-      price
+      price,
+      depositPrice,
     });
 
     const type = this.props.match.params.type;
@@ -171,14 +179,14 @@ export default class Configurator extends React.Component {
   static getInitialData() {
     return {
       body: {type: 'model', asset: "c95aa5d830344811b8e726740199dda0", id: "6d65d532ad564be39484f29eb8526521", name: "Eight String", price: "2399"},
-      ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", color: "#000", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
-      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", color: "#000", id: "b15f39a18970471e9b632e2b0085db13", name: "Eastern Hard Rock Maple", price: "0"},
-      fingerboard: {asset: "4405833b559f462381727a1b538182ed", color: "#000", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
-      sidedots: {color: "#000", id: "4261991f913648ab9cdee1a50e55a0a3", name: "Standard", price: "0"},
-      hardware: {color: "#000", id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
-      battery: {color: "#000", id: "6370194e256a4ae28264bcd0063abf6a", name: "Default 9V battery", price: "0"},
-      pickups: {color: "#000", id: "aef2b3e099d64a23a813d01be244c855", name: "White", price: "0"},
-      finish: {color: "#fcfcfc", id: "af47f49cfc0e4a6e9f7954d3e1d54948", name: "Natural Transparent", price: "0"},
+      ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
+      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", id: "b25678b75dd245e29fdafd88b219c620", name: "Eastern Hard Rock Maple", price: "0"},
+      fingerboard: {asset: "4405833b559f462381727a1b538182ed", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
+      sidedots: {id: "8f7b9e3d941441318fbedecd10844f23", name: "Standard", price: "0"},
+      hardware: {id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
+      battery: {id: "f645bb13b9a042ceaf17dbdc35e05bcd", name: "Default 9V battery", price: "0"},
+      'pickup-covers': {id: "aef2b3e099d64a23a813d01be244c855", name: "White", price: "0"},
+      finish: {id: "af47f49cfc0e4a6e9f7954d3e1d54948", name: "Natural Transparent", price: "0"},
     };
   }
 
@@ -195,10 +203,12 @@ export default class Configurator extends React.Component {
 
     selections[key] = option;
     const price = this.evaluatePrice(selections);
+    const depositPrice = price * DEPOSIT_RATE;
 
     this.setState({
       selections,
       price,
+      depositPrice,
     });
   }
 
@@ -256,18 +266,23 @@ export default class Configurator extends React.Component {
   async submitOrder(token) {
     const { order } = this.state;
 
-    const response = await Axios('https://us-central1-abasi-configurator.cloudfunctions.net/submitOrder', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      data: {
-        order,
-        token: token.id,
-      }
-    });
+    let response;
 
-    if (response.ok) {
-      toast.success('Successfully submitted order. You receipt has been emailed to you');
-    } else {
+    try {
+      response = await Axios('http://localhost:3009/submitOrder', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        data: {
+          order,
+          token: token.id,
+        }
+      });
+        
+      toast.success('Successfully submitted order!');
+
+      this.changeMode(Modes.SUCCESS);
+      console.log(response);
+    } catch (ex) {
       toast.error('Unable to process order at this time');
       console.log(response);
     }
@@ -304,6 +319,7 @@ export default class Configurator extends React.Component {
             items={this.state.items}
             makeSelection={this.makeSelection}
             price={this.state.price}
+            depositPrice={this.state.depositPrice}
             loading={this.state.loading}
             handlePrice={this.handlePrice}
             handleMain={this.handleMain}
