@@ -10,7 +10,7 @@ import {StripeProvider} from 'react-stripe-elements';
 import Welcome from './Welcome';
 
 // Styles
-import '../styles/app.css';
+import '../styles/app.scss';
 
 const App = () => (
   <StripeProvider apiKey="pk_test_lnRXcSkX6q4yXi2LMXXZxGsK">

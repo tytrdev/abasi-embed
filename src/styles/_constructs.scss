@@ -4,7 +4,6 @@
 }
 
 * {
-  font-size: 100%;
   font-family: 'Akrobat';
 }
 
@@ -48,16 +47,24 @@ a {
   .center {
     align-self: center;
   }
+
+  .scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
 }
 
 /* Notifications */
 .toast-container {
-  width: calc(100% - 350px);
   bottom: 0;
   left: 0;
   margin-left: 0;
   text-align: center;
   opacity: 0.7;
+
+  @include breakpoint(md) {
+    width: calc(100% - 350px);
+  }
 }
 
 .dark-toast {

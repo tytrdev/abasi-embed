@@ -21,7 +21,7 @@ export default class ConfirmationView extends React.Component {
 
   render() {
     return (
-      <div className="container confirmation-view">
+      <div className="container confirmation-view scroll">
         <div className="container columns">
           <div className="back-button">
             <button className="back-to-order" onClick={this.props.handleMain}>

@@ -44,10 +44,10 @@ export default class Info extends React.Component {
         <h3>Larada 8 String Multiscale - ${bodyPrice} USD</h3>
 
         <div className="configurator-selection">
-          <div className="index"></div>
-          <div className="title">Line Item</div>
-          <div className="name">Selection</div>
-          <div className="price">Price</div>
+            <div className="index"></div>
+            <div className="title"><strong>Line Item</strong></div>
+            <div className="name"><strong>Selection</strong></div>
+            <div className="price"><strong>Price</strong></div>
         </div>
 
         { this.getSelectionContent('body-wood', 'Body Wood', 1) }

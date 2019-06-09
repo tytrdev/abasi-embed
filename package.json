@@ -32,7 +32,7 @@
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "start-embeddable": "npm-run-all -p watch-css start-embeddable-js",
-    "start-embeddable-js": "react-scripts start PORT=3001",
+    "start-embeddable-js": "PORT=3001 react-scripts start",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
     "predeploy": "npm run build",
