@@ -42,7 +42,7 @@ export default class CustomerView extends React.Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container scroll">
         <div className="container columns">
           <div className="back-button">
             <button className="back-to-order" onClick={this.props.handleMain}>
@@ -51,12 +51,12 @@ export default class CustomerView extends React.Component {
           </div>
 
           <div className="container customer-info">
-            <div className="price">
+            <div className="view-price">
               Order Total - ${this.props.price} <br />
               Deposit Total - ${this.props.depositPrice} (35%)
             </div>
 
-            <h1>Customer Information</h1>
+            <h1 className="pt50">Customer Information</h1>
             <h3>Please fill out this information accurately</h3>
 
             <form onSubmit={this.submitOrder}>

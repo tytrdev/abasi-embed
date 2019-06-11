@@ -39,7 +39,7 @@ export default class Info extends React.Component {
 
     return (
       <div className="flex columns configurator-info">
-        <h1>Order Confirmation</h1>
+        <h1 className="pt50">Order Confirmation</h1>
 
         <h3>Larada 8 String Multiscale - ${bodyPrice} USD</h3>
 
