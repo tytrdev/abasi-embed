@@ -8,6 +8,28 @@ export default class Info extends React.Component {
     this.getSelectionContent = this.getSelectionContent.bind(this);
   }
 
+  getFlatSelectionContent(selection, title, index) {
+    return (
+      <div className="configurator-selection" key={`selection-${selection.id}`}>
+        <div className="index">
+          { index }.
+        </div>
+
+        <div className="title">
+          { title }
+        </div>
+
+        <div className="name">
+          {selection.name}
+        </div>
+
+        <div className="price">
+          ${selection.price} USD
+        </div>
+      </div>
+    );
+  }
+
   getSelectionContent(key, title, index) {
     const selection = _.find(this.props.data, (v, k) => {
       return k === key;
@@ -37,6 +59,9 @@ export default class Info extends React.Component {
   render() {
     const bodyPrice = _.find(this.props.data, (v, k) => k === 'body').price;
 
+    const misc = _.find(this.props.data, (v, k) => k === 'misc');
+    const miscContent = _.map(misc, (m, i) => this.getFlatSelectionContent(m, 'Miscellaneous', 8 + i))
+
     return (
       <div className="flex columns configurator-info">
         <h1>Order Confirmation</h1>
@@ -57,7 +82,8 @@ export default class Info extends React.Component {
         { this.getSelectionContent('hardware', 'Hardware Style', 5) }
         { this.getSelectionContent('pickup-covers', 'Pickup Covers', 6) }
         { this.getSelectionContent('finish', 'Finish', 7) }
-        { this.getSelectionContent('battery', 'Battery Style', 8) }
+
+        { miscContent }
 
         <button type="button" onClick={this.props.submitOrder} className="submit-order-button">
           Continue to Order Submission

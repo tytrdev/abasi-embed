@@ -1,6 +1,7 @@
 const PORT = 3009; // TODO: Environment variable
 
 const express = require('express');
+const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const Stripe = require('stripe')('sk_test_fTClyFRlz7M95AhfSIFY7oUN');
 const bodyParser = require('body-parser');
@@ -83,4 +84,4 @@ app.post('/submitOrder', async (request, response) => {
 });
 
 // Start Server
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
+app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));

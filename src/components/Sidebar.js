@@ -46,6 +46,7 @@ class Sidebar extends React.Component {
           items={this.props.items}
           renderer={this.props.renderer}
           callback={this.props.callback}
+          miscCallback={this.props.miscCallback}
           uuids={this.props.uuids}
           setUuids={this.props.setUuids}
           selections={this.props.selections}

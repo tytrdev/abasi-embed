@@ -192,7 +192,6 @@ export default class Renderer {
           case Groups.Round_Knob_on_body:
           case Groups.Tuner_Gold_Gear:
           case Groups.Tuner_Screws:
-          // case Groups: Metal ring on tuner?
             child.material = this.materials.hardwareMaterial;
             break;
           case Groups.Strings:
