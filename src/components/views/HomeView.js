@@ -43,6 +43,7 @@ export default class HomeView extends React.Component {
             columns
             renderer={this.props.renderer}
             callback={this.props.makeSelection}
+            miscCallback={this.props.toggleMiscSelection}
             uuids={this.props.uuids}
             setUuids={this.props.setUuids}
             selections={this.props.selections}
@@ -64,6 +65,7 @@ export default class HomeView extends React.Component {
             items={this.props.items}
             renderer={this.props.renderer}
             callback={this.props.makeSelection}
+            miscCallback={this.props.toggleMiscSelection}
             uuids={this.props.uuids}
             setUuids={this.props.setUuids}
             selections={this.props.selections}
@@ -78,6 +80,7 @@ export default class HomeView extends React.Component {
 
 HomeView.propTypes = {
   makeSelection: PropTypes.func.isRequired,
+  toggleMiscSelection: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired,
   renderer: PropTypes.object.isRequired,
   price: PropTypes.number.isRequired,

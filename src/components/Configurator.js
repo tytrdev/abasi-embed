@@ -26,6 +26,12 @@ import textureMap from '../constants/texture-map';
 
 const DEPOSIT_RATE = 0.35;
 
+const reducePrice = (p, c) => {
+  p = Number.parseInt(p);
+  c = Number.parseInt(c);
+  return p + c;
+};
+
 export default class Configurator extends React.Component {
   constructor(props) {
     super(props);
@@ -57,6 +63,7 @@ export default class Configurator extends React.Component {
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
+    this.toggleMiscSelection = this.toggleMiscSelection.bind(this);
 
     // Name discrepancy is purposeful and legacy
     this.makeSelection = this.configureSelection.bind(this);
@@ -77,6 +84,34 @@ export default class Configurator extends React.Component {
   setUuids(id) {
     this.setState({
       uuids: [id],
+    });
+  }
+
+  toggleMiscSelection(selection) {
+    const { misc } = this.state.selections;
+    const selectionExists = _.find(misc, s => s.id === selection.id);
+
+    let newMisc;
+
+    if (selectionExists) {
+      newMisc = _.filter(misc, m => m.id !== selection.id);
+    } else {
+      newMisc = misc;
+      newMisc.push(selection);
+    }
+
+    const { selections } = this.state;
+    selections.misc = newMisc;
+
+    const price = this.evaluatePrice(selections);
+    const depositPrice = price * DEPOSIT_RATE;
+
+    console.log(newMisc);
+
+    this.setState({
+      selections,
+      price,
+      depositPrice,
     });
   }
 
@@ -179,14 +214,14 @@ export default class Configurator extends React.Component {
   static getInitialData() {
     return {
       body: {type: 'model', asset: "c95aa5d830344811b8e726740199dda0", id: "6d65d532ad564be39484f29eb8526521", name: "Eight String", price: "2399"},
-      ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
+      'body-wood': {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
       neck: {asset: "812bdd08e0a0433a9eec59a835736bee", id: "b25678b75dd245e29fdafd88b219c620", name: "Eastern Hard Rock Maple", price: "0"},
       fingerboard: {asset: "4405833b559f462381727a1b538182ed", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
       sidedots: {id: "8f7b9e3d941441318fbedecd10844f23", name: "Standard", price: "0"},
       hardware: {id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
-      battery: {id: "f645bb13b9a042ceaf17dbdc35e05bcd", name: "Default 9V battery", price: "0"},
       'pickup-covers': {id: "aef2b3e099d64a23a813d01be244c855", name: "White", price: "0"},
       finish: {id: "af47f49cfc0e4a6e9f7954d3e1d54948", name: "Natural Transparent", price: "0"},
+      misc: [],
     };
   }
 
@@ -213,12 +248,16 @@ export default class Configurator extends React.Component {
   }
 
   evaluatePrice(selections) {
-    return Number.parseInt(_.map(selections, s => s.price).reduce((p, c) => {
-      p = Number.parseInt(p);
-      c = Number.parseInt(c);
-
-      return p + c;
-    }, 0));
+    return Number.parseInt(_.map(selections, (selection, key) => {
+      if (key === 'misc') {
+        console.log('Calculating misc stuff');
+        const miscPrice = Number.parseInt(_.map(selection, s => s.price).reduce(reducePrice, 0));
+        console.log(miscPrice);
+        return miscPrice;
+      } else {
+        return selection.price;
+      }
+    }).reduce(reducePrice, 0));
   }
 
   getItems() {
@@ -269,7 +308,7 @@ export default class Configurator extends React.Component {
     let response;
 
     try {
-      response = await Axios('http://localhost:3009/submitOrder', {
+      response = await Axios('https://us-central1-abasi-configurator.cloudfunctions.net/server/submitOrder', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         data: {
@@ -318,6 +357,7 @@ export default class Configurator extends React.Component {
             renderer={this.renderer}
             items={this.state.items}
             makeSelection={this.makeSelection}
+            toggleMiscSelection={this.toggleMiscSelection}
             price={this.state.price}
             depositPrice={this.state.depositPrice}
             loading={this.state.loading}

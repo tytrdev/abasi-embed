@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import uuid from 'uuid';
 
 import {
   Accordion,
@@ -18,6 +19,8 @@ class Menu extends React.Component {
     this.getOption = this.getOption.bind(this);
     this.getItem = this.getItem.bind(this);
     this.displayDescription = this.displayDescription.bind(this);
+    this.getMiscItems = this.getMiscItems.bind(this);
+    this.getMiscOption = this.getMiscOption.bind(this);
 
     this.state = {
       expiredDescriptions: [],
@@ -104,7 +107,7 @@ class Menu extends React.Component {
     // const key = this.props.mobile ? `mobile-menu-item-option-${item.id}-${i}` : `menu-item-option-${item.id}-${i}`;
 
     return (
-      <span className={optionClass} onClick={() => this.props.callback(item, option)}>
+      <span className={optionClass} onClick={() => this.props.callback(item, option)} key={uuid.v4()}>
         <span className="item-option-name">
           { option.name }
         </span>
@@ -130,7 +133,7 @@ class Menu extends React.Component {
     }
 
     return (
-      <AccordionItem onClick={() => this.props.setUuids(item.id)} uuid={item.id}>
+      <AccordionItem onClick={() => this.props.setUuids(item.id)} uuid={item.id} key={item.id}>
         <AccordionItemHeading onClick={() => this.displayDescription(item)}>
           <AccordionItemButton>
             <span className="item-title">
@@ -147,14 +150,72 @@ class Menu extends React.Component {
     );
   }
 
-  render() {
-    const items = _.map(this.props.items, this.getItem);
+  getMiscOption(item, option, i) {
+    const misc = _.find(this.props.selections, (s, k) => k === 'misc');
+    const isActive = _.find(misc, o => o.id === option.id);
+    const showPrice = Number.parseInt(option.price) > 0;
+    const optionClass = `item-option ${ isActive ? 'active' : '' }`;
 
     return (
-      <Accordion preExpanded={this.props.uuids} allowZeroExpanded className="configurator-menu">
-        { items }
-      </Accordion>
+      <span className={optionClass} onClick={() => this.props.miscCallback(option)} key={uuid.v4()}>
+        <span className="item-option-name">
+          { option.name }
+        </span>
+
+        <span className="item-option-price">
+          { showPrice &&
+            <span>+ ${ option.price }</span>
+          }
+        </span>
+      </span>
+    )
+  }
+
+  getMiscItems(miscItem) {
+    const options = _.map(miscItem.options, (option, i) => {
+      return this.getMiscOption(miscItem, option, i);
+    });
+
+    return (
+      <AccordionItem onClick={() => this.props.setUuids(miscItem.id)} uuid={miscItem.id}>
+        <AccordionItemHeading onClick={() => this.displayDescription(miscItem)}>
+          <AccordionItemButton>
+            <span className="item-title">
+              { miscItem.title }
+            </span>
+          </AccordionItemButton>
+        </AccordionItemHeading>
+        <AccordionItemPanel>
+          <span className="item-options">
+            { options}
+          </span>
+        </AccordionItemPanel>
+      </AccordionItem>
     );
+  }
+
+  render() {
+    const nonMiscItems = _.filter(this.props.items, i => i.key !== 'misc');
+    const miscItem = _.find(this.props.items, i => i.key === 'misc');
+
+    if (miscItem) {
+      const items = _.map(nonMiscItems, this.getItem);
+      const miscItems = this.getMiscItems(miscItem);
+  
+      return (
+        <Accordion preExpanded={this.props.uuids} allowZeroExpanded className="configurator-menu">
+          {/* Standard Items */}
+          { items }
+  
+          {/* Misc items are handled differently */}
+          { miscItems }
+        </Accordion>
+      );
+    } else {
+      return (
+        ''
+      );
+    }
   }
 }
 
@@ -165,6 +226,7 @@ Menu.defaultProps = {
 Menu.propTypes = {
   items: PropTypes.array.isRequired,
   callback: PropTypes.func.isRequired,
+  miscCallback: PropTypes.func.isRequired,
   columns: PropTypes.bool,
   renderer: PropTypes.object.isRequired,
   selections: PropTypes.object.isRequired,
