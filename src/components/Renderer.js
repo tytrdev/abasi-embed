@@ -5,6 +5,8 @@ import _ from 'lodash';
 import Groups from '../constants/groups';
 import Materials from './helpers/Materials';
 
+import { Storage } from '../firebase';
+
 const Three = require('three');
 
 function colorToSigned24Bit(s) {
@@ -31,7 +33,12 @@ export default class Renderer {
     this.selectTexture = this.selectTexture.bind(this);
     this.selectMaterial = this.selectMaterial.bind(this);
 
-    this.renderer = new Three.WebGLRenderer({ alpha: true, antialias: true, precision: 'highp' });
+    this.renderer = new Three.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      precision: 'highp',
+      preserveDrawingBuffer: true,
+    });
 
     this.container = undefined;
     this.textureLoader = new Three.TextureLoader();
@@ -51,7 +58,7 @@ export default class Renderer {
       darkMetalMaterial: Materials.metalWithColor(reflectionCube, 0x222222),
       blackMetalMaterial: Materials.metalWithColor(reflectionCube, 0x272222),
       lighterMetalMaterial: Materials.metalWithColor(reflectionCube, 0x333333),
-      
+
       // Satin materials
       satinMetalMaterial: Materials.withColor(reflectionCube, 0xBFC1C2),
       brownMaterial: Materials.withColor(reflectionCube, 0x272222),
@@ -82,37 +89,39 @@ export default class Renderer {
   async createScene() {
     this.scene = new Three.Scene();
     this.camera = new Three.PerspectiveCamera(75, this.container.clientWidth / this.container.clientHeight, 0.1, 200);
-    this.camera.position.z = -100;
+    // this.camera.position.x = -100;
+    // this.camera.position.y = -100;
+    // this.camera.position.z = -100;
 
     // Setup controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.rotateSpeed = 1.0;
     this.controls.zoomSpeed = 1;
     this.controls.maxDistance = 80;
-    this.controls.minDistance = 20;
+    this.controls.minDistance = 50;
     this.controls.panSpeed = 0;
     this.controls.enableZoom = true;
     this.controls.enablePan = false;
-    
-    const AMBIENT_INTENSITY = 1.0;
-    const LIGHT_INTENSITY = 0.28;
 
-    const ambient = new Three.AmbientLight( 0xffffff, AMBIENT_INTENSITY );
+    const AMBIENT_INTENSITY = 1.0;
+    const LIGHT_INTENSITY = 0.18;
+
+    const ambient = new Three.AmbientLight(0xffffff, AMBIENT_INTENSITY);
     this.scene.add(ambient);
 
-    const lightModifier = 200;
+    const lightModifier = 100;
     const positions = [
-      // [1, 1, 1, LIGHT_INTENSITY],
+      [1, 1, 1, LIGHT_INTENSITY],
       [1, 1, -1, LIGHT_INTENSITY],
-      // [1, -1, 1, LIGHT_INTENSITY],
+      [1, -1, 1, LIGHT_INTENSITY],
       [1, -1, -1, LIGHT_INTENSITY],
-      // [-1, 1, 1, LIGHT_INTENSITY],
+      [-1, 1, 1, LIGHT_INTENSITY],
       [-0.5, 1.5, -1, LIGHT_INTENSITY],
-      // [-1, -1, 1, LIGHT_INTENSITY],
+      [-1, -1, 1, LIGHT_INTENSITY],
       [-1, -1, -1, LIGHT_INTENSITY],
     ];
-    
-    _.each(positions, data => {
+
+    _.each(positions, (data) => {
       const light = new Three.PointLight(0xffffff, data[3]);
       light.position.set(data[0] * lightModifier, data[1] * lightModifier, data[2] * lightModifier);
       light.lookAt(0, 0, 0);
@@ -184,8 +193,8 @@ export default class Renderer {
 
     const model = this.models.current;
 
-    model.traverse( child => {
-      if ( child instanceof Three.Mesh ) {
+    model.traverse((child) => {
+      if (child instanceof Three.Mesh) {
         switch (child.name) {
           case Groups.Tuners:
           case Groups.Bridge:
@@ -196,7 +205,7 @@ export default class Renderer {
             child.material = this.materials.hardwareMaterial;
             break;
           case Groups.Strings:
-          case Groups.Frets:          
+          case Groups.Frets:
           case Groups.Screws:
           case Groups.BatteryScrews:
             child.material = this.materials.satinMetalMaterial;
@@ -244,7 +253,7 @@ export default class Renderer {
             if (this.finishMode === TRANSPARENT) {
               child.material = this.materials.transparentMaterial;
             }
-  
+
             if (this.finishMode === STANDARD) {
               child.material = this.materials.standardMaterial;
             }
@@ -258,7 +267,7 @@ export default class Renderer {
             }
             break;
           case Groups.HeadTop:
-            //TODO: CHange this
+            // TODO: CHange this
             child.material = this.materials.headStockMaterial;
             break;
           case Groups.Neck:
@@ -288,7 +297,7 @@ export default class Renderer {
   }
 
   async updateSelections(type, key, option) {
-    switch(type) {
+    switch (type) {
       case 'material':
         await this.selectMaterial(option, key);
         break;
@@ -307,12 +316,15 @@ export default class Renderer {
 
   // Configurator utilities for selections
   async selectModel(selection) {
-    const model = _.find(this.assets.models, m => m.id === selection.asset);
+    // const model = _.find(this.assets.models, m => m.id === selection.asset);
 
-    await new Promise((resolve, reject) => {
+    await new Promise(async (resolve, reject) => {
       try {
-        this.modelLoader.load(model.location, obj => {
-          obj.rotation.y = Math.PI;
+        // TODO: Configure url
+        const url = await Storage.ref('models/Corrected Larada13.FBX').getDownloadURL();
+
+        this.modelLoader.load(url, (obj) => {
+          obj.rotation.y = Math.PI * 1.1;
           this.models.current = obj;
 
           if (this.container.clientWidth < 1250) {
@@ -325,7 +337,7 @@ export default class Renderer {
             this.models.current.scale.y = 1.0;
             this.models.current.scale.z = 1.0;
           }
-          
+
           this.scene.add(obj);
           this.prepareModel();
           resolve('Success');
@@ -336,13 +348,13 @@ export default class Renderer {
       } catch (ex) {
         reject(ex);
       }
-    })
+    });
   }
 
   async selectMaterial(selection, key) {
     const color = colorToSigned24Bit(selection.color);
 
-    switch(key) {
+    switch (key) {
       case 'hardware':
         this.materials.hardwareMaterial = Materials.metalWithColor(this.reflectionCube, color);
         break;
@@ -368,15 +380,17 @@ export default class Renderer {
       texture = this.textures[asset.filename];
     }
 
-    switch(key) {
+    switch (key) {
       case 'body-wood':
+        const color = this.materials.standardMaterial ? this.materials.standardMaterial.color : undefined;
         this.materials.standardMaterial = Materials.withoutColor(this.reflectionCube);
         this.materials.standardMaterial.map = texture;
+        this.materials.standardMaterial.color = color;
 
         if (selection.transparentAsset) {
           const transparentAsset = _.find(this.assets.textures, t => t.id === selection.transparentAsset);
           const transparentTexture = Materials.loadTexture(transparentAsset.location, this.textureLoader, this.renderer);
-  
+
           this.materials.transparentMaterial = Materials.withoutColor(this.reflectionCube);
           this.materials.transparentMaterial.map = transparentTexture;
         }
@@ -408,7 +422,7 @@ export default class Renderer {
     // Default battery cover
     this.materials.batteryMaterial = this.materials.darkMetalMaterial;
 
-    switch(type) {
+    switch (type) {
       case 'standard':
         if (selection.name.toLowerCase().indexOf('transparent') !== -1) {
           this.finishMode = TRANSPARENT;
@@ -416,7 +430,7 @@ export default class Renderer {
           this.finishMode = STANDARD;
         }
 
-        const map = this.materials.standardMaterial.map;
+        const { map } = this.materials.standardMaterial;
         this.materials.standardMaterial = Materials.withColor(this.reflectionCube, color);
         this.materials.standardMaterial.map = map;
 
@@ -447,6 +461,8 @@ export default class Renderer {
         }
 
         this.materials.batteryMaterial = this.materials.artSeriesMaterial;
+        break;
+      default:
         break;
     }
   }

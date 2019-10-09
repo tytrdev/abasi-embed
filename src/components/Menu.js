@@ -21,7 +21,7 @@ class Menu extends React.Component {
 
     this.state = {
       expiredDescriptions: [],
-    }
+    };
   }
 
   displayDescription(item) {
@@ -97,25 +97,17 @@ class Menu extends React.Component {
 
   getOption(item, option, i) {
     const isActive = _.find(this.props.selections, s => s.id === option.id);
-    const showPrice = Number.parseInt(option.price) > 0;
-
-    const optionClass = `item-option ${ isActive ? 'active' : '' }`;
+    const optionClass = `item-option ${isActive ? 'active' : ''}`;
 
     // const key = this.props.mobile ? `mobile-menu-item-option-${item.id}-${i}` : `menu-item-option-${item.id}-${i}`;
 
     return (
-      <span className={optionClass} onClick={() => this.props.callback(item, option)}>
+      <span role="label" className={optionClass} onClick={() => this.props.callback(item, option)}>
         <span className="item-option-name">
           { option.name }
         </span>
-
-        <span className="item-option-price">
-          { showPrice &&
-            <span>+ ${ option.price }</span>
-          }
-        </span>
       </span>
-    )
+    );
   }
 
   getItem(item, i) {
@@ -124,9 +116,7 @@ class Menu extends React.Component {
     if (item.key === 'finish') {
       options = this.getFinishOptions(item, i);
     } else {
-      options = _.map(item.options, (option, i) => {
-        return this.getOption(item, option, i);
-      });
+      options = _.map(item.options, (option, i) => this.getOption(item, option, i));
     }
 
     return (

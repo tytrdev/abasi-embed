@@ -2,7 +2,6 @@ import React from 'react';
 import { slide as Slide } from 'react-burger-menu';
 
 import Menu from './Menu';
-import Price from './Price';
 
 class Sidebar extends React.Component {
   constructor(props) {
@@ -27,18 +26,12 @@ class Sidebar extends React.Component {
   }
 
   render() {
-    const visibility = this.props.loading ? 'hidden' : 'visible';
-
-    const style = {
-      visibility,
-    };
-
     return (
       <Slide
         isOpen={this.state.open}
-        pageWrapId={ 'app-body' }
-        outerContainerId={ 'app-container' }
-        
+        pageWrapId="app-body"
+        outerContainerId="app-container"
+
       >
         <Menu
           columns
@@ -50,14 +43,6 @@ class Sidebar extends React.Component {
           setUuids={this.props.setUuids}
           selections={this.props.selections}
         />
-
-        <button type="button" className="review-btn" onClick={this.props.handlePrice} style={style}>
-          Review Order
-        </button>
-
-        <div className="price-btn" style={style}>  
-          <Price price={this.props.price} handlePrice={this.props.handlePrice} />
-        </div>
       </Slide>
     );
   }

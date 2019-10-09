@@ -183,10 +183,10 @@ a {
   .review-btn {
     position: absolute;
     z-index: 10;
-    right: 185px;
+    right: 20px;
     bottom: 10px;
     border: none;
-    width: 150px;
+    width: 300px;
     color: #000000;
     background-color: #22b85b;
     height: 50px;
@@ -489,10 +489,10 @@ a {
     margin: 0;
     position: absolute;
     z-index: 10;
-    right: 120px;
+    right: 10px;
     bottom: 10px;
     border: none;
-    width: 150px;
+    width: 300px;
     color: #000000;
     background-color: #22b85b;
     height: 50px;
@@ -715,7 +715,7 @@ a {
         color: #000000;
         background-color: #ffffff; }
       .item-options .item-option .item-option-name {
-        font-weight: 300; }
+        font-weight: 600; }
       .item-options .item-option.active .item-option-name {
         color: #22b85b; }
       .item-options .item-option .item-option-price {

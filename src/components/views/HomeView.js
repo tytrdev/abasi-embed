@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import H2P from 'html2pdf.js';
 
 import MobileMenu from '../Sidebar';
 import ViewPort from '../Viewport';
 import Menu from '../Menu';
-import Price from '../Price';
 
 export default class HomeView extends React.Component {
   constructor(props) {
@@ -31,10 +31,7 @@ export default class HomeView extends React.Component {
     return (
       <div className="flex home">
         <div className="home-viewport">
-          <ViewPort
-            price={this.props.price}
-            handlePrice={this.props.handlePrice}
-          />
+          <ViewPort />
         </div>
 
         <div className="home-menu" style={style}>
@@ -48,14 +45,11 @@ export default class HomeView extends React.Component {
             selections={this.props.selections}
           />
 
-          <button type="button" className="review-btn" onClick={this.props.handlePrice} style={style}>
-            <i className="fa fa-shopping-cart"></i>
-            Review Order
+          <button type="button" className="review-btn" onClick={this.props.handleScreenshot} style={style}>
+            <i className="fa fa-camera" />
+            Take Screenshot
           </button>
 
-          <div className="price-btn" style={style}>  
-            <Price price={this.props.price} handlePrice={this.props.handlePrice} />
-          </div>
         </div>
 
         <div className="home-menu-mobile">
@@ -67,8 +61,6 @@ export default class HomeView extends React.Component {
             uuids={this.props.uuids}
             setUuids={this.props.setUuids}
             selections={this.props.selections}
-            price={this.props.price}
-            handlePrice={this.props.handlePrice}
           />
         </div>
       </div>
@@ -80,8 +72,6 @@ HomeView.propTypes = {
   makeSelection: PropTypes.func.isRequired,
   items: PropTypes.array.isRequired,
   renderer: PropTypes.object.isRequired,
-  price: PropTypes.number.isRequired,
   loading: PropTypes.bool.isRequired,
-  handlePrice: PropTypes.func.isRequired,
   selections: PropTypes.object.isRequired,
 };

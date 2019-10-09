@@ -2,30 +2,23 @@ import React from 'react';
 import _ from 'lodash';
 import { Line } from 'rc-progress';
 import { toast } from 'react-toastify';
-import Axios from 'axios';
+import { ClipLoader } from 'react-spinners';
 
 // Constants
 import Modes from '../constants/modes';
-import ModelMap from '../constants/model-map';
 
 // WebGL Renderer
 import Renderer from './Renderer';
 
 // Views
 import HomeView from './views/HomeView';
-import OptionView from './views/OptionView';
-import CustomerView from './views/CustomerView';
-import PaymentView from './views/PaymentView';
-import ConfirmationView from './views/ConfirmationView';
-import SuccessView from './views/SuccessView';
 
 import ConfigurationService from '../services/ConfigurationService';
 import AssetService from '../services/AssetService';
-import { ClipLoader } from 'react-spinners';
 import textureMap from '../constants/texture-map';
 
-const DEPOSIT_RATE = 0.35;
-
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-param-reassign */
 export default class Configurator extends React.Component {
   constructor(props) {
     super(props);
@@ -36,8 +29,6 @@ export default class Configurator extends React.Component {
       parsing: false,
       percent: 0,
       mode: Modes.HOME,
-      price: 0,
-      depositPrice: 0,
       items: [],
       selections: {},
       uuids: [],
@@ -46,17 +37,14 @@ export default class Configurator extends React.Component {
     // Event bindings
     this.getItems = this.getItems.bind(this);
     this.propogateEvent = this.propogateEvent.bind(this);
-    this.evaluatePrice = this.evaluatePrice.bind(this);
     this.configureSelection = this.configureSelection.bind(this);
     this.changeMode = this.changeMode.bind(this);
-    this.handlePrice = this.handlePrice.bind(this);
     this.handleOrder = this.handleOrder.bind(this);
     this.handleMain = this.handleMain.bind(this);
-    this.handlePayment = this.handlePayment.bind(this);
-    this.submitOrder = this.submitOrder.bind(this);
     this.updatePercent = this.updatePercent.bind(this);
     this.transformItems = this.transformItems.bind(this);
     this.setUuids = this.setUuids.bind(this);
+    this.handleScreenshot = this.handleScreenshot.bind(this);
 
     // Name discrepancy is purposeful and legacy
     this.makeSelection = this.configureSelection.bind(this);
@@ -64,40 +52,9 @@ export default class Configurator extends React.Component {
     // Setup components to use for different views
     this.components = {
       [Modes.HOME]: HomeView,
-      [Modes.OPTION]: OptionView,
-      [Modes.PAYMENT]: PaymentView,
-      [Modes.CONFIRMATION]: ConfirmationView,
-      [Modes.CUSTOMER]: CustomerView,
-      [Modes.SUCCESS]: SuccessView,
     };
 
     this.renderer = new Renderer(this.updatePercent);
-  }
-
-  setUuids(id) {
-    this.setState({
-      uuids: [id],
-    });
-  }
-
-  transformItems(items) {
-    _.each(items, item => {
-      item.options = _.sortBy(item.options, ['id', 'price']);
-    });
-
-    const nonFinishItems = _.filter(items, i => i.key !== 'finish');
-    const finishItems = _.sortBy(_.filter(items, i => i.key === 'finish'), i => Number.parseInt(i.position));
-
-    const item = finishItems[0];
-    item.title = 'Finish'
-    item.options.push(...finishItems[1].options);
-    item.options.push(...finishItems[2].options);
-
-    const transformedItems = [...nonFinishItems, item];
-
-    return _.sortBy(transformedItems, (i) => {
-      return Number.parseInt(i.position);
-    });
   }
 
   async componentDidMount() {
@@ -115,35 +72,22 @@ export default class Configurator extends React.Component {
     // Grab configuration items for the user menu
     const items = await ConfigurationService.getConfig();
     const models = await AssetService.getModelMetadata();
-    const textures = await AssetService.getTextureMetadata();    
+    const textures = await AssetService.getTextureMetadata();
 
-    // TODO: Fix this
-    // Begin pricing module
     const selections = Configurator.getInitialData();
-    const price = this.evaluatePrice(selections);
-    const depositPrice = price * DEPOSIT_RATE;
 
     this.setState({
       items: this.transformItems(items),
       models,
       textures,
       selections,
-      price,
-      depositPrice,
     });
 
-    const type = this.props.match.params.type;
-
-    if (!type) {
-      toast.error('Unable to load proper config, please check the URL you were given');
-    }
-
-    const model = ModelMap[type];
     this.renderer.finishMode = 'transparent';
-    await this.renderer.selectModel({ asset: model }, 'body');
+    await this.renderer.selectModel({ }, 'body');
     await this.renderer.selectTexture({ asset: textureMap.maple, matte: true }, 'neck');
     await this.renderer.selectTexture({ asset: textureMap.alderTransparent, transparentAsset: textureMap.alder, matte: true }, 'body-wood');
-    await this.renderer.selectTexture({ asset: textureMap.richlite, name:'richlite', matte: true }, 'fingerboard');
+    await this.renderer.selectTexture({ asset: textureMap.richlite, name: 'richlite', matte: true }, 'fingerboard');
     await this.renderer.selectMaterial({ color: '#BFC1C2' }, 'hardware');
     await this.renderer.selectFinish({ name: 'transparent', color: '#ffffff' });
     await this.renderer.prepareModel();
@@ -163,31 +107,56 @@ export default class Configurator extends React.Component {
     }
   }
 
-  updatePercent(percent, loading, parsing) {
-    if (percent >= 100) {
-      loading = false;
-    }
-
-    loading = loading === undefined ? true : loading;
-
+  setUuids(id) {
     this.setState({
-      percent,
-      loading: loading,
+      uuids: [id],
     });
   }
 
   static getInitialData() {
     return {
-      body: {type: 'model', asset: "c95aa5d830344811b8e726740199dda0", id: "6d65d532ad564be39484f29eb8526521", name: "Eight String", price: "2399"},
-      ['body-wood']: {type: 'texture', asset: "5b06ca27a3fa40648e4261ba722521c5", id: "923e7yrq98w7dyf", location: "textures/roasted-eastern-hard-rock-flamed-maple.png", name: "Alder", price: "0"},
-      neck: {asset: "812bdd08e0a0433a9eec59a835736bee", id: "b25678b75dd245e29fdafd88b219c620", name: "Eastern Hard Rock Maple", price: "0"},
-      fingerboard: {asset: "4405833b559f462381727a1b538182ed", id: "fe58aedfd9104bfd878f11c785e08a61", name: "Richlite", price: "0"},
-      sidedots: {id: "8f7b9e3d941441318fbedecd10844f23", name: "Standard", price: "0"},
-      hardware: {id: "c53266c4916242128c2f6889f28cf5b6", name: "Chrome", price: "0"},
-      battery: {id: "f645bb13b9a042ceaf17dbdc35e05bcd", name: "Default 9V battery", price: "0"},
-      'pickup-covers': {id: "aef2b3e099d64a23a813d01be244c855", name: "White", price: "0"},
-      finish: {id: "af47f49cfc0e4a6e9f7954d3e1d54948", name: "Natural Transparent", price: "0"},
+      body: {
+        type: 'model', asset: 'c95aa5d830344811b8e726740199dda0', id: '6d65d532ad564be39484f29eb8526521', name: 'Eight String', price: '2399',
+      },
+      'body-wood': {
+        type: 'texture', asset: '5b06ca27a3fa40648e4261ba722521c5', id: '923e7yrq98w7dyf', location: 'textures/roasted-eastern-hard-rock-flamed-maple.png', name: 'Alder', price: '0',
+      },
+      neck: {
+        asset: '812bdd08e0a0433a9eec59a835736bee', id: 'b25678b75dd245e29fdafd88b219c620', name: 'Eastern Hard Rock Maple', price: '0',
+      },
+      fingerboard: {
+        asset: '4405833b559f462381727a1b538182ed', id: 'fe58aedfd9104bfd878f11c785e08a61', name: 'Richlite', price: '0',
+      },
+      sidedots: { id: '8f7b9e3d941441318fbedecd10844f23', name: 'Standard', price: '0' },
+      hardware: { id: 'c53266c4916242128c2f6889f28cf5b6', name: 'Chrome', price: '0' },
+      battery: { id: 'f645bb13b9a042ceaf17dbdc35e05bcd', name: 'Default 9V battery', price: '0' },
+      'pickup-covers': { id: 'aef2b3e099d64a23a813d01be244c855', name: 'White', price: '0' },
+      finish: { id: 'af47f49cfc0e4a6e9f7954d3e1d54948', name: 'Natural Transparent', price: '0' },
     };
+  }
+
+  getItems() {
+    return this.state.items;
+  }
+
+  handleScreenshot() {
+    const strMime = 'image/jpeg';
+    const imgData = this.renderer.renderer.domElement.toDataURL(strMime);
+
+    const saveFile = (strData, filename) => {
+      const link = document.createElement('a');
+      if (typeof link.download === 'string') {
+        document.body.appendChild(link); // Firefox requires the link to be in the body
+        link.download = filename;
+        link.href = strData;
+        link.click();
+        document.body.removeChild(link); // remove the link when done
+      } else {
+        window.open(strData, '_blank');
+      }
+    };
+
+    saveFile(imgData.replace(strMime, 'image/octet-stream'), 'abasi.jpg');
   }
 
   async configureSelection(selection, option) {
@@ -202,38 +171,49 @@ export default class Configurator extends React.Component {
     }
 
     selections[key] = option;
-    const price = this.evaluatePrice(selections);
-    const depositPrice = price * DEPOSIT_RATE;
 
     this.setState({
       selections,
-      price,
-      depositPrice,
     });
   }
 
-  evaluatePrice(selections) {
-    return Number.parseInt(_.map(selections, s => s.price).reduce((p, c) => {
-      p = Number.parseInt(p);
-      c = Number.parseInt(c);
+  updatePercent(percent, loading) {
+    if (percent >= 100) {
+      loading = false;
+    }
 
-      return p + c;
-    }, 0));
+    loading = loading === undefined ? true : loading;
+
+    this.setState({
+      percent,
+      loading,
+    });
   }
 
-  getItems() {
-    return this.state.items;
+  transformItems(items) {
+    _.each(items, (item) => {
+      item.options = _.sortBy(item.options, ['id', 'price']);
+    });
+
+    const nonFinishItems = _.filter(items, i => i.key !== 'finish');
+    const finishItems = _.sortBy(_.filter(items, i => i.key === 'finish'), i => Number.parseInt(i.position, 10));
+
+    const item = finishItems[0];
+    item.title = 'Finish';
+    item.options.push(...finishItems[1].options);
+    item.options.push(...finishItems[2].options);
+
+    const transformedItems = [...nonFinishItems, item];
+
+    return _.sortBy(transformedItems, i => Number.parseInt(i.position, 10));
   }
+
 
   // Modal utilities
   changeMode(mode) {
     this.setState({
       mode,
     });
-  }
-
-  handlePrice() {
-    this.changeMode(Modes.CONFIRMATION);
   }
 
   handleOrder() {
@@ -261,31 +241,6 @@ export default class Configurator extends React.Component {
     });
 
     this.changeMode(Modes.PAYMENT);
-  }
-
-  async submitOrder(token) {
-    const { order } = this.state;
-
-    let response;
-
-    try {
-      response = await Axios('http://localhost:3009/submitOrder', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        data: {
-          order,
-          token: token.id,
-        }
-      });
-        
-      toast.success('Successfully submitted order!');
-
-      this.changeMode(Modes.SUCCESS);
-      console.log(response);
-    } catch (ex) {
-      toast.error('Unable to process order at this time');
-      console.log(response);
-    }
   }
 
   render() {
@@ -331,6 +286,7 @@ export default class Configurator extends React.Component {
             setUuids={this.setUuids}
             selections={this.state.selections}
             submit={this.submitOrder}
+            handleScreenshot={this.handleScreenshot}
           />
         }
       </div>

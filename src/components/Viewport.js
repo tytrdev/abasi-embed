@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 export default class Viewport extends React.Component {
   constructor(props) {
@@ -22,9 +21,3 @@ export default class Viewport extends React.Component {
     );
   }
 }
-
-Viewport.propTypes = {
-  price: PropTypes.number.isRequired,
-  handlePrice: PropTypes.func.isRequired,
-};
-
