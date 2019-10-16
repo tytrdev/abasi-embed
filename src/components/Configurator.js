@@ -115,23 +115,19 @@ export default class Configurator extends React.Component {
 
   static getInitialData() {
     return {
-      body: {
-        type: 'model', asset: 'c95aa5d830344811b8e726740199dda0', id: '6d65d532ad564be39484f29eb8526521', name: 'Eight String', price: '2399',
-      },
       'body-wood': {
-        type: 'texture', asset: '5b06ca27a3fa40648e4261ba722521c5', id: '923e7yrq98w7dyf', location: 'textures/roasted-eastern-hard-rock-flamed-maple.png', name: 'Alder', price: '0',
+        type: 'texture', asset: '5b06ca27a3fa40648e4261ba722521c5', id: 'b6ae064e6fb04e5bad69e9229010a9b4', location: 'textures/roasted-eastern-hard-rock-flamed-maple.jpg', name: 'Alder', price: '0',
       },
       neck: {
-        asset: '812bdd08e0a0433a9eec59a835736bee', id: 'b25678b75dd245e29fdafd88b219c620', name: 'Eastern Hard Rock Maple', price: '0',
+        asset: '812bdd08e0a0433a9eec59a835736bee', id: '6c77322ddea8455fbbd91ae0942477a2', name: 'Eastern Hard Rock Maple', price: '0',
       },
       fingerboard: {
-        asset: '4405833b559f462381727a1b538182ed', id: 'fe58aedfd9104bfd878f11c785e08a61', name: 'Richlite', price: '0',
+        asset: '4405833b559f462381727a1b538182ed', id: '68f394a899d74c9f942cb26e034b08bd', name: 'Richlite', price: '0',
       },
-      sidedots: { id: '8f7b9e3d941441318fbedecd10844f23', name: 'Standard', price: '0' },
-      hardware: { id: 'c53266c4916242128c2f6889f28cf5b6', name: 'Chrome', price: '0' },
-      battery: { id: 'f645bb13b9a042ceaf17dbdc35e05bcd', name: 'Default 9V battery', price: '0' },
-      'pickup-covers': { id: 'aef2b3e099d64a23a813d01be244c855', name: 'White', price: '0' },
-      finish: { id: 'af47f49cfc0e4a6e9f7954d3e1d54948', name: 'Natural Transparent', price: '0' },
+      sidedots: { id: '6c899451ae334dcdafd0466ed2558de3', name: 'Standard', price: '0' },
+      hardware: { id: '974bf0eb02df4439a07608b15edefdb6', name: 'Chrome', price: '0' },
+      'pickup-covers': { id: '615a3592ae5e49a6a86457ef38bf6648', name: 'White', price: '0' },
+      finish: { id: '505276711ea746fa82f0140006bc1ecf', name: 'Natural Transparent', price: '0' },
     };
   }
 
