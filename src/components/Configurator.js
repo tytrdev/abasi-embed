@@ -13,8 +13,10 @@ import Renderer from './Renderer';
 // Views
 import HomeView from './views/HomeView';
 
-import ConfigurationService from '../services/ConfigurationService';
+// import ConfigurationService from '../services/ConfigurationService';
+import Config from '../constants/config.json';
 import AssetService from '../services/AssetService';
+import Textures from '../constants/textures.json';
 import textureMap from '../constants/texture-map';
 
 /* eslint-disable class-methods-use-this */
@@ -70,15 +72,17 @@ export default class Configurator extends React.Component {
     this.rendererContainer.appendChild(this.renderer.getRendererElement());
 
     // Grab configuration items for the user menu
-    const items = await ConfigurationService.getConfig();
-    const models = await AssetService.getModelMetadata();
-    const textures = await AssetService.getTextureMetadata();
+    // const items = await ConfigurationService.getConfig();
+
+    const items = Config;
+    // const models = await AssetService.getModelMetadata();
+    const textures = Textures;
 
     const selections = Configurator.getInitialData();
 
     this.setState({
       items: this.transformItems(items),
-      models,
+      // models,
       textures,
       selections,
     });
@@ -101,7 +105,7 @@ export default class Configurator extends React.Component {
       this.rendererContainer.appendChild(this.renderer.getRendererElement());
       this.renderer.resize();
       this.renderer.assets = {
-        models: this.state.models,
+        // models: this.state.models,
         textures: this.state.textures,
       };
     }

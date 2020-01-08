@@ -5,8 +5,6 @@ import _ from 'lodash';
 import Groups from '../constants/groups';
 import Materials from './helpers/Materials';
 
-import { Storage } from '../firebase';
-
 const Three = require('three');
 
 function colorToSigned24Bit(s) {
@@ -321,7 +319,8 @@ export default class Renderer {
     await new Promise(async (resolve, reject) => {
       try {
         // TODO: Configure url
-        const url = await Storage.ref('models/Corrected Larada13.FBX').getDownloadURL();
+        // const url = await Storage.ref('models/Corrected Larada13.FBX').getDownloadURL();
+        const url = 'https://firebasestorage.googleapis.com/v0/b/abasi-configurator/o/models%2FCorrected%20Larada13.FBX?alt=media&token=2b81a1c0-5164-491b-8077-44ed170f6ec4';
 
         this.modelLoader.load(url, (obj) => {
           obj.rotation.y = Math.PI * 1.1;
@@ -370,11 +369,13 @@ export default class Renderer {
   }
 
   async selectTexture(selection, key) {
+    console.log(selection.asset);
     const asset = _.find(this.assets.textures, t => t.id === selection.asset);
     let texture;
 
     if (!this.textures[asset.filename]) {
-      texture = Materials.loadTexture(asset.location, this.textureLoader, this.renderer);
+      const url = `https://cors-anywhere.herokuapp.com/https://abasiguitars.com/configurator/${asset.filename}`;
+      texture = Materials.loadTexture(url, this.textureLoader, this.renderer);
       this.textures[asset.filename] = texture;
     } else {
       texture = this.textures[asset.filename];
@@ -389,7 +390,8 @@ export default class Renderer {
 
         if (selection.transparentAsset) {
           const transparentAsset = _.find(this.assets.textures, t => t.id === selection.transparentAsset);
-          const transparentTexture = Materials.loadTexture(transparentAsset.location, this.textureLoader, this.renderer);
+          const url = `https://cors-anywhere.herokuapp.com/https://abasiguitars.com/configurator/${transparentAsset.filename}`;
+          const transparentTexture = Materials.loadTexture(url, this.textureLoader, this.renderer);
 
           this.materials.transparentMaterial = Materials.withoutColor(this.reflectionCube);
           this.materials.transparentMaterial.map = transparentTexture;
@@ -450,7 +452,8 @@ export default class Renderer {
         this.materials.artSeriesMaterial = Materials.withoutColor(this.reflectionCube);
 
         const asset = _.find(this.assets.textures, t => t.id === selection.asset);
-        this.materials.artSeriesMaterial.map = Materials.loadTexture(asset.location, this.textureLoader, this.renderer);
+        const url = `https://cors-anywhere.herokuapp.com/https://abasiguitars.com/configurator/${asset.filename}`;
+        this.materials.artSeriesMaterial.map = Materials.loadTexture(url, this.textureLoader, this.renderer);
 
         const newLight = selection.name.toLowerCase().indexOf('light') !== -1;
 

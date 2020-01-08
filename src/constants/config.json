@@ -1,0 +1,338 @@
+﻿[
+  {
+    "description": "Select a premium finish",
+    "id": "32zZfbuphmNocYPSJvst",
+    "key": "finish",
+    "options": [
+      {
+        "color": "#eac9b6",
+        "id": "169da4a56ae1419fad15e2a4a4b10ed1",
+        "name": "Shell Pink",
+        "price": "350",
+        "type": "premium"
+      },
+      {
+        "color": "#bed6d6",
+        "id": "d243c1873baa4449b106c7a4516cddfc",
+        "name": "Sage",
+        "price": "350",
+        "type": "premium"
+      },
+      {
+        "color": "#cec76c",
+        "id": "15dc9f1572654c4ca89560c4c43f24f7",
+        "name": "Chartreuse",
+        "price": "350",
+        "type": "premium"
+      },
+      {
+        "color": "#b5b5b5",
+        "id": "34ff92be4e804da8a62e955938d2dc6c",
+        "name": "Chalk",
+        "price": "350",
+        "type": "premium"
+      },
+      {
+        "color": "#2d2828",
+        "id": "21d529234ce5406a8e0283fc882f0cbd",
+        "name": "Black",
+        "price": "350",
+        "type": "premium"
+      },
+      {
+        "color": "#2d0507",
+        "id": "f956d5058a914521a62ff6fd57db8408",
+        "name": "Oxblood",
+        "price": "350",
+        "type": "premium"
+      }
+    ],
+    "position": 9,
+    "title": "Premium Finish",
+    "type": "finish"
+  },
+  {
+    "description": "Select your neck wood. While each choice presents different aesthetics, each wood is carefully selected and prepared with stability and tone in mind. All maple selections are quartersawn eastern hard rock species.",
+    "id": "CuvsCk1h7BDdQGdW3gge",
+    "key": "neck",
+    "options": [
+      {
+        "asset": "4c85aa3f2385469a877bf7253884d449",
+        "color": "#000",
+        "id": "176050c248aa42dca8a28292c76c7d74",
+        "name": "Roasted Eastern Hard Rock Flame Maple",
+        "price": "100"
+      },
+      {
+        "asset": "5d4f155fc8fb4ae4aba5567cc0e117db",
+        "color": "#000",
+        "id": "b25678b75dd245e29fdafd88b219c620",
+        "name": "Eastern Hard Rock Maple",
+        "price": "0"
+      },
+      {
+        "asset": "8353ede9f8fa4ee097874350dde714ea",
+        "color": "#000",
+        "id": "a9eb8a9c70a343a09ed3983d3b03f374",
+        "name": "Roasted Eastern Hard Rock Maple",
+        "price": "50"
+      },
+      {
+        "asset": "05d3db4da50547fbaee1eb4ce784a489",
+        "color": "#000",
+        "id": "b15f39a18970471e9b632e2b0085db13",
+        "name": "Genuine Mahogany",
+        "price": "0"
+      }
+    ],
+    "position": 2,
+    "title": "Neck Wood",
+    "type": "texture"
+  },
+  {
+    "description": "Select an Art Series finish",
+    "id": "LAxvAM8jRwkINnkd7XOA",
+    "key": "finish",
+    "options": [
+      {
+        "asset": "0816a71cfbe247a8b363961628a02ddc",
+        "color": "#171616",
+        "id": "48b692ead82f4e95abed3e8e86cf8315",
+        "name": "Night Garden",
+        "price": "500",
+        "type": "artseries"
+      },
+      {
+        "asset": "07661544c25f47e4a8b8d755ec76dca4",
+        "color": "#f9f6f6",
+        "id": "03393874cfa146ff93b805b01d162367",
+        "name": "New Light",
+        "price": "500",
+        "type": "artseries"
+      },
+      {
+        "asset": "1bbed0a974154b2c971af96546dc4d14",
+        "color": "#f7f2f2",
+        "id": "026d7321f4a44d4896adcce3479fdc9d",
+        "name": "Malibu Frost",
+        "price": "500",
+        "type": "artseries"
+      }
+    ],
+    "position": 10,
+    "title": "Art Series Finish",
+    "type": "finish"
+  },
+  {
+    "description": "The Larada finish options bring your style to life. Select from Standard, Premium or Art Series options.  Standard includes classic colors which feature a satin finish with exposed wood pores for a natural feel. Choose an Ash body for very pronounced, exposed wood grain. The grain openings can even be painted with a secondary color for a unique look.  Premium colors are inspired by the automotive world and add a modern feel to your guitar. Each choice comes with two sheens: matte/satin center, and shiny, polished bevels.Art Series designs take your build to another dimension. Each carefully selected and designed piece is applied according to fine art standards.",
+    "id": "LITnb9AwCUUJeLCeaMbs",
+    "key": "finish",
+    "options": [
+      {
+        "color": "#e9cf92",
+        "id": "a0d62850868f4336844ac207d8baf4db",
+        "name": "Vintage Blonde",
+        "price": "0",
+        "transparent": true,
+        "type": "standard"
+      },
+      {
+        "color": "#fcfcfc",
+        "id": "af47f49cfc0e4a6e9f7954d3e1d54948",
+        "name": "Natural Transparent",
+        "price": "0",
+        "transparent": true,
+        "type": "standard"
+      },
+      {
+        "color": "#d21d1d",
+        "id": "a9125969b35b48aaa69f16cc2baafb46",
+        "name": "Candy Apple Red",
+        "price": "0",
+        "transparent": true,
+        "type": "standard"
+      },
+      {
+        "color": "#eac9b6",
+        "id": "23362365c1344ef09d48f6957546acb5",
+        "name": "Shell Pink",
+        "price": "0",
+        "transparent": true,
+        "type": "standard"
+      },
+      {
+        "color": "#f1f1e5",
+        "id": "8600375405844075ae4a09cc6ddff39f",
+        "name": "Olympic White",
+        "price": "0",
+        "transparent": true,
+        "type": "standard"
+      },
+      {
+        "color": "#403e3e",
+        "id": "10d8dab5a62b4abaa0676f69f0474ce9",
+        "name": "Black",
+        "price": "0",
+        "transparent": true,
+        "type": "standard"
+      }
+    ],
+    "position": 8,
+    "title": "Standard Finish",
+    "type": "finish"
+  },
+  {
+    "description": "Select between standard side dots or high-quality fluorescent Luminlay dots, which allow for visibility in dark spaces.",
+    "id": "YRamS3EyrkFYVYU3eKdy",
+    "key": "sidedots",
+    "options": [
+      {
+        "color": "#000",
+        "id": "8f7b9e3d941441318fbedecd10844f23",
+        "name": "Standard",
+        "price": "0"
+      },
+      {
+        "color": "#2f98e7",
+        "id": "e162ea113b0b49e8b85d6b2842126964",
+        "name": "Luminlay",
+        "price": "30"
+      }
+    ],
+    "position": 4,
+    "title": "Side Dots",
+    "type": "material"
+  },
+  {
+    "description": "Choose your body wood. Each piece of wood is hand-selected, with careful attention to quality, grain pattern, and light weight.",
+    "id": "YXsMeLVIjtMd8kHOpuTa",
+    "key": "body-wood",
+    "options": [
+      {
+        "transparentAsset": "215890ec2f724255b8565598f1247755",
+        "color": "#000",
+        "id": "923e7yrq98w7dyf",
+        "location": "textures/roasted-eastern-hard-rock-flamed-maple.png",
+        "name": "Alder",
+        "price": "0",
+        "asset": "89817cd92fdc4b198e8d649a5a264bb0"
+      },
+      {
+        "transparentAsset": "9e5e55fc06a445859b11db9b89808b9b",
+        "color": "#000",
+        "id": "87351c113ca5466a92d6d5cd265536c5",
+        "name": "Swamp Ash",
+        "price": "0",
+        "asset": "493ea07d14324967bc82ea96b5e2d2aa"
+      },
+      {
+        "transparentAsset": "05d3db4da50547fbaee1eb4ce784a489",
+        "color": "#000",
+        "id": "suahd87a76cd7",
+        "location": "textures/genuine-mahogany.png",
+        "name": "Genuine Mahogany",
+        "price": "100",
+        "asset": "2da7e15f005a4dadbecba739ec0ef156"
+      },
+      {
+        "transparentAsset": "e2dd07a9bbb7494e8655cfaf056a28e3",
+        "color": "#000",
+        "id": "b9a94304da6c4cc79432b945aea1f17e",
+        "name": "Roasted Basswood",
+        "price": "100",
+        "asset": "e2dd07a9bbb7494e8655cfaf056a28e3"
+      }
+    ],
+    "position": 1,
+    "title": "Body Wood",
+    "type": "texture"
+  },
+  {
+    "description": "Select your pickup covers color",
+    "id": "ZtZIDIPvi0WNclP6sIe8",
+    "key": "pickup-covers",
+    "options": [
+      {
+        "color": "#3c3838",
+        "id": "d39fc5b49c46464f9e3900f0e6f12e31",
+        "name": "Black",
+        "price": "0"
+      },
+      {
+        "color": "#f5eeee",
+        "id": "aef2b3e099d64a23a813d01be244c855",
+        "name": "White",
+        "price": "0"
+      }
+    ],
+    "position": 7,
+    "title": "Pickup Covers",
+    "type": "material"
+  },
+  {
+    "description": "Select a hardware style",
+    "id": "p5Wg177iZK3nEt1TPqEH",
+    "key": "hardware",
+    "options": [
+      {
+        "color": "#383333",
+        "id": "0623de305e624835858c14e81ecb7f35",
+        "name": "Black",
+        "price": "0"
+      },
+      {
+        "color": "#e3bf48",
+        "id": "fa133705b30c468ba609625960456512",
+        "name": "Gold",
+        "price": "80"
+      },
+      {
+        "color": "#c4bbbb",
+        "id": "c53266c4916242128c2f6889f28cf5b6",
+        "name": "Chrome",
+        "price": "0"
+      }
+    ],
+    "position": 5,
+    "title": "Hardware Style",
+    "type": "material"
+  },
+  {
+    "description": "Select the fingerboard option that best suits your style. Richlite is a very dense, dark synthetic material known for ultra-fast feel and durability. Maple offers bright tone, familiar feel in a variety of roasted or figured options.",
+    "id": "w22AXsBxiCuKdi4jiOEv",
+    "key": "fingerboard",
+    "options": [
+      {
+        "asset": "7cc83945ee574c4bba52ec5626b8505a",
+        "color": "#000",
+        "id": "d20818e8417f4c0fb77661a022e9007f",
+        "name": "Birdseye Maple",
+        "price": "50"
+      },
+      {
+        "asset": "5d4f155fc8fb4ae4aba5567cc0e117db",
+        "color": "#000",
+        "id": "e617260a1449465c9433525a7bcb040c",
+        "name": "Eastern Hard Rock Maple",
+        "price": "0"
+      },
+      {
+        "asset": "5d10892082eb4847a8d9af2a1b6a1ca3",
+        "color": "#000",
+        "id": "fe58aedfd9104bfd878f11c785e08a61",
+        "name": "Richlite",
+        "price": "0"
+      },
+      {
+        "asset": "8353ede9f8fa4ee097874350dde714ea",
+        "color": "#000",
+        "id": "510d93d61ee24fd59f31b36803761060",
+        "name": "Roasted Eastern Hard Rock Maple",
+        "price": "50"
+      }
+    ],
+    "position": 3,
+    "title": "Fingerboard Material",
+    "type": "texture"
+  }
+]

@@ -1,30 +1,31 @@
 import OBJLoader from 'three-obj-loader';
+
 const Three = require('three');
 
 OBJLoader(Three);
 
 class Materials {
   static envMap() {
-    const path = "/";
-    var format = '.jpg';
-    var urls = [
-      path + 'px' + format, path + 'nx' + format,
-      path + 'py' + format, path + 'ny' + format,
-      path + 'pz' + format, path + 'nz' + format
+    const path = '/';
+    const format = '.jpg';
+    const urls = [
+      `${path}px${format}`, `${path}nx${format}`,
+      `${path}py${format}`, `${path}ny${format}`,
+      `${path}pz${format}`, `${path}nz${format}`,
     ];
 
     return new Three.CubeTextureLoader().load(urls);
   }
 
   static metalWithColor(reflectionCube, color) {
-    return new Three.MeshStandardMaterial( {
-      color: color,
-  
+    return new Three.MeshStandardMaterial({
+      color,
+
       roughness: 0.4,
       metalness: 0.5,
-  
+
       envMap: reflectionCube, // important -- especially for metals!
-      
+
       aoMapIntensity: 1.0,
       envMapIntensity: 0.7,
       // displacementScale: 2.436143, // from original model
@@ -35,12 +36,12 @@ class Materials {
   }
 
   static metalWithoutColor(reflectionCube) {
-    return new Three.MeshStandardMaterial( {
+    return new Three.MeshStandardMaterial({
       roughness: 0.3,
       metalness: 0.5,
-  
+
       envMap: reflectionCube, // important -- especially for metals!
-      
+
       aoMapIntensity: 1.0,
       envMapIntensity: 1.0,
       // displacementScale: 2.436143, // from original model
@@ -51,8 +52,8 @@ class Materials {
   }
 
   static withColor(reflectionCube, color) {
-    return new Three.MeshStandardMaterial( {
-      color: color,
+    return new Three.MeshStandardMaterial({
+      color,
       envMap: reflectionCube,
       roughness: 0.6,
       metalness: 0.5,
@@ -63,7 +64,7 @@ class Materials {
   }
 
   static withoutColor(reflectionCube) {
-    return new Three.MeshStandardMaterial( {
+    return new Three.MeshStandardMaterial({
       envMap: reflectionCube,
       roughness: 0.6,
       metalness: 0.5,
@@ -74,14 +75,14 @@ class Materials {
   }
 
   static artSeries(reflectionCube, color) {
-    return new Three.MeshStandardMaterial( {
-      color: color,
-  
+    return new Three.MeshStandardMaterial({
+      color,
+
       roughness: 0.4,
       metalness: 0.4,
-  
+
       envMap: reflectionCube, // important -- especially for metals!
-      
+
       aoMapIntensity: 1.0,
       envMapIntensity: 0.7,
       // displacementScale: 2.436143, // from original model
@@ -92,6 +93,7 @@ class Materials {
   }
 
   static loadTexture(path, loader, renderer) {
+    console.log(path);
     const texture = loader.load(path);
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
     // texture.anisotropy = 16;
